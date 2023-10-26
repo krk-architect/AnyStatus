@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30615.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34004.107
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B32B69E7-D7BF-4D84-B9A6-76202CB9E3C0}"
 EndProject
@@ -51,7 +51,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnyStatus.Plugins.Demo", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnyStatus.Plugins.UptimeRobot", "Plugins\AnyStatus.Plugins.UptimeRobot\AnyStatus.Plugins.UptimeRobot.csproj", "{465BC059-4A99-4E03-8227-94F44B472923}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnyStatus.Plugins.GitHub", "Plugins\AnyStatus.Plugins.GitHub\AnyStatus.Plugins.GitHub.csproj", "{A7466371-68D6-487C-A33D-2CA477FF5BA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnyStatus.Plugins.GitHub", "Plugins\AnyStatus.Plugins.GitHub\AnyStatus.Plugins.GitHub.csproj", "{A7466371-68D6-487C-A33D-2CA477FF5BA1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9B57BB1C-78CD-4864-BEFB-4D53869F1F9A}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		Directory.Build.props = Directory.Build.props
+		..\LICENSE = ..\LICENSE
+		..\publish.ps1 = ..\publish.ps1
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -267,8 +277,8 @@ Global
 		{8AD1FCF9-3D83-404A-A0FA-75360FC247BC}.Release|x64.Build.0 = Release|Any CPU
 		{8AD1FCF9-3D83-404A-A0FA-75360FC247BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{8AD1FCF9-3D83-404A-A0FA-75360FC247BC}.Release|x86.Build.0 = Release|Any CPU
-		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|Any CPU.Build.0 = Debug|x64
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|ARM.Build.0 = Debug|Any CPU
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|ARM64.ActiveCfg = Debug|Any CPU
@@ -277,8 +287,8 @@ Global
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|x64.Build.0 = Debug|x64
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Debug|x86.Build.0 = Debug|Any CPU
-		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Release|Any CPU.ActiveCfg = Release|x64
+		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Release|Any CPU.Build.0 = Release|x64
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Release|ARM.ActiveCfg = Release|Any CPU
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Release|ARM.Build.0 = Release|Any CPU
 		{233F9E62-01A6-41FF-87BB-7A2E37B3CD08}.Release|ARM64.ActiveCfg = Release|Any CPU

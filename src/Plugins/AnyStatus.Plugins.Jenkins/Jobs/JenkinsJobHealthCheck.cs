@@ -17,6 +17,7 @@ namespace AnyStatus.Plugins.Jenkins.Jobs
             var job = await api.GetJobAsync(request.Context.Job, cancellationToken).ConfigureAwait(false);
 
             request.Context.Status = job is null ? Status.Unknown : job.Status;
+            request.Context.URL    = job?.URL;
         }
     }
 }

@@ -6,4 +6,9 @@ namespace AnyStatus.Plugins.Jenkins.API.Models
     {
         public IEnumerable<JenkinsView> Views { get; set; }
     }
+
+    public class JenkinsJobsResponse
+    {
+        public IEnumerable<JenkinsJob> Jobs { get; set; }
+    }
 }

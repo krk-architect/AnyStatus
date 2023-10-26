@@ -22,12 +22,9 @@ namespace AnyStatus.Plugins.Jenkins.Jobs
                 var response = await new JenkinsApi(endpoint).GetJobsAsync(default);
                 var endpointUri = new Uri(endpoint.Address.EndsWith('/') ? endpoint.Address : endpoint.Address + '/');
 
-                foreach (var view in response.Views)
+                foreach (var job in response.Jobs)
                 {
-                    foreach (var job in view.Jobs)
-                    {
-                        results.Add(new NameValueItem($"{view.Name} > {job.Name}", '/' + endpointUri.MakeRelativeUri(new Uri(job.URL)).ToString()));
-                    }
+                    results.Add(new NameValueItem($"{job.Name}", '/' + endpointUri.MakeRelativeUri(new Uri(job.URL)).ToString()));
                 }
             }
 

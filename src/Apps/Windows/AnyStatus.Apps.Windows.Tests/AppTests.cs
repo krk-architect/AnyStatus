@@ -2,17 +2,14 @@ using System;
 using Xunit;
 using Xunit.Priority;
 
+// ReSharper disable ArrangeAttributes
+
 namespace AnyStatus.Apps.Windows.Tests
 {
     [TestCaseOrderer(PriorityOrderer.Name, PriorityOrderer.Assembly)]
     public class AppTests : IClassFixture<AppFixture>
     {
-        private readonly AppFixture _fixture;
-
-        public AppTests(AppFixture fixture)
-        {
-            _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
-        }
+        private readonly AppFixture _fixture = new AppFixture();
 
         [Fact, Priority(1)]
         public void RefreshAllTest()
