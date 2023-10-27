@@ -11,7 +11,7 @@
     <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource DefaultListBoxStyle}">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
     </Style>
-    
+
     <Style x:Key="DashboardPanelStyle" TargetType="Panel">
         <Setter Property="Margin" Value="0,10,7,10"/>
     </Style>

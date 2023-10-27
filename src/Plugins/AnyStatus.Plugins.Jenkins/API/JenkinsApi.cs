@@ -1,6 +1,7 @@
 ﻿using AnyStatus.Plugins.Jenkins.API.Models;
 using RestSharp;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,11 +29,13 @@ namespace AnyStatus.Plugins.Jenkins.API
 
         private async Task<T> ExecuteAsync<T>(IRestRequest request, CancellationToken cancellationToken) where T : new()
         {
-            var response = await _client.ExecuteAsync<T>(request, cancellationToken).ConfigureAwait(false);
+            var requestUrl = request.GetUrl();
+            var response   = await _client.ExecuteAsync<T>(request, cancellationToken).ConfigureAwait(false);
 
             if (response.IsSuccessful && response.ErrorException is null)
             {
-                return response.Data;
+                var responseData = response.Data;
+                return responseData;
             }
 
             throw new Exception("An error response received from Jenkins server.", response.ErrorException);
@@ -51,9 +54,32 @@ namespace AnyStatus.Plugins.Jenkins.API
         {
             var request = new RestRequest(_endpoint.Address + job + "lastBuild/api/json");//todo: remove redundant _endpoint.Address
 
-            request.AddParameter("tree", "result,building,executor[progress],url");
+            request.AddParameter("tree", "result,building,executor[progress],url,duration,estimatedDuration,timestamp");
 
             return ExecuteAsync<JenkinsJob>(request, cancellationToken);
         }
     }
+
+    public static class ApiExtensions
+    {
+        public static string GetUrl(this IRestRequest request)
+        {
+            var sb = new StringBuilder();
+            sb.Append(request.Resource);
+            for (var i = 0; i < request.Parameters.Count; i++)
+            {
+                var p         = request.Parameters[i];
+                var separator = i == 0 ? '?' : '&';
+
+                if (p.Type == ParameterType.GetOrPost   ||
+                    p.Type == ParameterType.QueryString ||
+                    p.Type == ParameterType.UrlSegment)
+                {
+                    sb.Append($"{separator}{p.Name}={p.Value}");
+                }
+            }
+            return sb.ToString();
+        }
+    }
+
 }

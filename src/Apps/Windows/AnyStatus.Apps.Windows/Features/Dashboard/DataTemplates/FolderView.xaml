@@ -1,16 +1,34 @@
 ﻿<UserControl x:Class="AnyStatus.Apps.Windows.Features.Dashboard.DataTemplates.FolderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:widgets="clr-namespace:AnyStatus.API.Widgets;assembly=AnyStatus.API"
              xmlns:controls="clr-namespace:AnyStatus.Apps.Windows.Features.Dashboard.Controls"
-             mc:Ignorable="d" 
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=widgets:Widget, IsDesignTimeCreatable=False}">
     <DockPanel Style="{DynamicResource WidgetPanel}">
-        <controls:ColorStatusIndicator DockPanel.Dock="Left"/>
-        <controls:IconStatusIndicator DockPanel.Dock="Left"/>
-        <TextBlock Text="{Binding Count}" FontSize="17" DockPanel.Dock="Right" Margin="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Margin="7,0,0,0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+        <iconPacks:PackIconControl
+	        DockPanel.Dock="Left"
+	        Margin="0,5,10,5"
+	        Width="16"
+	        Height="16"
+	        VerticalAlignment="Center"
+	        HorizontalAlignment="Center"
+	        Foreground="gray"
+	        Kind="{x:Static iconPacks:PackIconFontistoKind.Folder}" />
+        <controls:ColorStatusIndicator DockPanel.Dock="Left" />
+        <controls:IconStatusIndicator DockPanel.Dock="Left" />
+        <TextBlock Text="{Binding Count}"
+                   FontSize="17"
+                   DockPanel.Dock="Right"
+                   Margin="12,5,12,5"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+        <TextBlock Margin="7,0,0,0"
+                   Text="{Binding Name}"
+                   TextTrimming="CharacterEllipsis"
+                   VerticalAlignment="Center"/>
     </DockPanel>
 </UserControl>

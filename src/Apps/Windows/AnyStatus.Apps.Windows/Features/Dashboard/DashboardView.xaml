@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="AnyStatus.Apps.Windows.Features.Dashboard.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:AnyStatus.Apps.Windows.Features.Dashboard"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:controls="clr-namespace:AnyStatus.Apps.Windows.Features.Dashboard.Controls"
@@ -36,14 +36,14 @@
         </Style>
 
         <HierarchicalDataTemplate x:Key="WidgetTemplate"
-                                  DataType="widgets:Widget" 
+                                  DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
-            <dataTemplates:WidgetView/>
+	        <dataTemplates:WidgetView/>
         </HierarchicalDataTemplate>
 
-        <HierarchicalDataTemplate x:Key="FolderTemplate" 
-                                  DataType="widgets:Widget" 
+        <HierarchicalDataTemplate x:Key="FolderTemplate"
+                                  DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
             <dataTemplates:FolderView/>
@@ -61,6 +61,13 @@
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
             <dataTemplates:PipelineView/>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate x:Key="JenkinsJobTemplate"
+                                  DataType="widgets:Widget"
+                                  ItemsSource="{Binding}"
+                                  ItemContainerStyle="{StaticResource TreeViewItemStyle}">
+	        <dataTemplates:JenkinsJobView />
         </HierarchicalDataTemplate>
 
         <HierarchicalDataTemplate x:Key="LabelTemplate"
@@ -142,7 +149,7 @@
                 <behaviors:InvokeCommandAction Command="{Binding Commands[CloseContextMenu]}" CommandParameter="{Binding ElementName=TreeView, Path=SelectedItem}" />
             </behaviors:EventTrigger>
         </behaviors:Interaction.Triggers>
-        
+
         <TextBlock Style="{StaticResource LoadingTextStyle}">Loading...</TextBlock>
 
         <TextBlock Style="{StaticResource TextStyle}" TextWrapping="Wrap">Click the add widget button above to create a widget</TextBlock>
