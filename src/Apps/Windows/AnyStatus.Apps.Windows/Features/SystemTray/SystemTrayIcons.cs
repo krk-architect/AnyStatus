@@ -15,6 +15,7 @@ namespace AnyStatus.Apps.Windows.Features.SystemTray
             [Status.None] = Load("StatusOK_grey.ico"),
             [Status.OK] = Load("StatusOK.ico"),
             [Status.Error] = Load("StatusCriticalError.ico"),
+            [Status.Failed] = Load("StatusCriticalError.ico"),
             [Status.Canceled] = Load("StatusStop_grey.ico"),
             [Status.Unknown] = Load("StatusStop_grey.ico"),
             [Status.Disabled] = Load("StatusPause_grey.ico"),

@@ -6,21 +6,24 @@ using AnyStatus.Core.App;
 using MediatR;
 using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace AnyStatus.Apps.Windows.Features.SystemTray
 {
     public sealed class SystemTray : NotifyPropertyChanged, ISystemTray
     {
-        private bool _disposed;
-        private string _status;
-        private readonly IMediator _mediator;
-        private readonly NotifyIcon _notifier;
+        private          bool             _disposed;
+        private          string           _status;
+        private readonly IMediator        _mediator;
+        private readonly NotifyIcon       _notifier;
         private readonly ContextMenuStrip _contextMenu;
+        private readonly IAppContext      _context;
 
         public SystemTray(IMediator mediator, IAppContext context)
         {
             _mediator = mediator;
+            _context  = context;
 
             _contextMenu = new ContextMenuFactory(mediator, context).Create();
 
@@ -38,7 +41,12 @@ namespace AnyStatus.Apps.Windows.Features.SystemTray
         public string Status
         {
             get => _status;
-            set => Set(ref _status, value);
+            set
+            {
+                Debug.WriteLine($"{nameof(SystemTray)}.{nameof(Status)} set   {nameof(value)}={value}");
+                Set(ref _status, value);
+                SetIcon(null, null);
+            }
         }
 
         private void WireEvents()
@@ -83,7 +91,16 @@ namespace AnyStatus.Apps.Windows.Features.SystemTray
             }
         }
 
-        private void SetIcon(object sender, EventArgs e) => _notifier.Icon = SystemTrayIcons.Get(Status);
+        private void SetIcon(object sender, EventArgs e)
+        {
+            var session                 = _context.Session;
+            var widget                  = session.Widget;
+            var widgetStatus            = widget.Status;
+
+            Debug.WriteLine($"{nameof(SystemTray)}.{nameof(SetIcon)}   {nameof(Status)}={Status}   {nameof(widgetStatus)}={widgetStatus}");
+
+            _notifier.Icon = SystemTrayIcons.Get(Status);
+        }
 
         public void Dispose()
         {
