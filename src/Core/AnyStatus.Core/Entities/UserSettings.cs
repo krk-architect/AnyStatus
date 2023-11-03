@@ -2,9 +2,11 @@
 using AnyStatus.Core.Themes;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace AnyStatus.Core.Settings
 {
+    [DebuggerDisplay("Theme={Theme}")]
     public class UserSettings
     {
         public UserSettings()

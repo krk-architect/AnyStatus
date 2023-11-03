@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 
 namespace AnyStatus.Core.Logging
 {
+    [DebuggerDisplay("{LogLevel}   {Message}")]
     public class LogEntry
     {
         public DateTime Time { get; set; }

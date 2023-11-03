@@ -2,6 +2,7 @@
 using Quartz.Spi;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
 
 namespace AnyStatus.Core.Jobs
 {
@@ -60,11 +61,17 @@ namespace AnyStatus.Core.Jobs
 
             job.JobDataMap.Put("data", data);
 
+            var refreshSeconds = Widget.DefaultRefreshSeconds;
+            if (data is Widget widget)
+            {
+                refreshSeconds = widget.RefreshSeconds;
+            }
+
             var trigger = TriggerBuilder.Create()
                 .WithIdentity(id)
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(10)
+                    .WithIntervalInSeconds(refreshSeconds)
                     .RepeatForever())
                 .Build();
 

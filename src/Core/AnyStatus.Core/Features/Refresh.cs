@@ -1,4 +1,5 @@
-﻿using AnyStatus.API.Widgets;
+﻿using System.Diagnostics;
+using AnyStatus.API.Widgets;
 using AnyStatus.Core.Jobs;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ namespace AnyStatus.Core.Features
 {
     public class Refresh
     {
+        [DebuggerDisplay("{Widget}")]
         public class Request : IRequest
         {
             public Request(IWidget widget) => Widget = widget;

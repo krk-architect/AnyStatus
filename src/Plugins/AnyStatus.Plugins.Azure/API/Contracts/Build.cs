@@ -18,6 +18,7 @@ namespace AnyStatus.Plugins.Azure.API.Contracts
         {
             "notStarted" => AnyStatus.API.Widgets.Status.Queued,
             "inProgress" => AnyStatus.API.Widgets.Status.Running,
+            "completed"  => AnyStatus.API.Widgets.Status.OK,
             _ => Result switch
             {
                 "notStarted" => AnyStatus.API.Widgets.Status.Running,

@@ -1,4 +1,5 @@
-﻿using AnyStatus.API.Events;
+﻿using System.Xml.Linq;
+using AnyStatus.API.Events;
 using AnyStatus.API.Notifications;
 using AnyStatus.API.Widgets;
 using MediatR;
@@ -20,16 +21,33 @@ namespace AnyStatus.Apps.Windows.Features.Widgets
 
         protected override void Handle(StatusChangedNotification<TWidget> notification)
         {
-            var message = $"Widget '{notification.Widget.Name}' status changed from {notification.Widget.PreviousStatus} to {notification.Widget.Status}.";
+            var previousStatus = notification.Widget.PreviousStatus?.Trim() ?? "";
+            if (string.IsNullOrWhiteSpace(previousStatus))
+            {
+                return; // no sense showing that a status changed from something to something else when it never had a status before
+            }
+
+            var currentStatus = notification.Widget.Status;
+            var message       = "";
+
+            var name = notification.Widget.Name;
+            if (name.ToLower() == "all")
+            {
+                message = $"System Tray STATUS CHANGED  [{currentStatus}  -->  {previousStatus}]";
+            }
+            else
+            {
+                message = $"Widget STATUS CHANGED  [{currentStatus}  -->  {previousStatus}]      \"{name}\"";
+            }
 
             if (_logger.IsEnabled(LogLevel.Trace))
             {
                 _logger.LogTrace(message);
             }
 
-            if (notification.Widget.PreviousStatus != Status.None)
+            if (previousStatus != Status.None)
             {
-                _notificationService.Send(new Notification(message, notification.Widget.Name));
+                _notificationService.Send(new Notification(message, name));
             }
         }
     }

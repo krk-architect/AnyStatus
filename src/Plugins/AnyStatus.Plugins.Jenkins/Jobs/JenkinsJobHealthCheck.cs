@@ -4,12 +4,17 @@ using AnyStatus.API.Widgets;
 using AnyStatus.Plugins.Jenkins.API;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.Core.Extensions;
 using AnyStatus.Plugins.Jenkins.API.Models;
+using Microsoft.Extensions.Logging;
 
 namespace AnyStatus.Plugins.Jenkins.Jobs
 {
     public class JenkinsJobHealthCheck : AsyncStatusCheck<JenkinsJobWidget>, IEndpointHandler<JenkinsEndpoint>
     {
+        public JenkinsJobHealthCheck(ILogger logger) => Logger = logger;
+
+        public ILogger         Logger { get; }
         public JenkinsEndpoint Endpoint { get; set; }
 
         protected override async Task Handle(StatusRequest<JenkinsJobWidget> request, CancellationToken cancellationToken)
@@ -24,9 +29,9 @@ namespace AnyStatus.Plugins.Jenkins.Jobs
             }
             catch (Exception e)
             {
-                if (e.Message.Contains("Timeout", StringComparison.InvariantCultureIgnoreCase))
+                if (e.IsTimeout())
                 {
-                    Console.WriteLine("*** TIMEOUT ***");
+                    Logger.LogWarning($"*** STATUS UNKNOWN ***  {request.Context.Job}");
                     return;
                 }
 
@@ -36,12 +41,46 @@ namespace AnyStatus.Plugins.Jenkins.Jobs
 
             if (job is null)
             {
+                Logger.LogWarning($"*** STATUS UNKNOWN ***  {request.Context.Job}");
                 request.Context.Status = Status.Unknown;
-                Console.WriteLine("*** STATUS UNKNOWN ***");
                 return;
             }
 
-            request.Context.Status      = job.Status;
+            var name = request.Context.Name;
+            var previousStatus = request.Context.Status?.Trim() ?? "";
+            var currentStatus  = job.Status?.Trim() ?? "";
+
+            if (!string.IsNullOrWhiteSpace(previousStatus)
+             && !string.IsNullOrWhiteSpace(currentStatus)
+             && previousStatus != currentStatus)
+            {
+                var message = $"STATUS CHANGED  [{currentStatus}  -->  {previousStatus}]      \"{name}\"";
+
+                if (currentStatus == Status.Error)
+                {
+                    Logger.LogCritical(message);
+                }
+                else
+                {
+                    Logger.LogInformation(message);
+                }
+            }
+            else if (job.IsCurrentlyRunning())
+            {
+                var duration = job.GetCurrentlyRunningDuration();
+                var message  = $"[{currentStatus} ({duration})]      \"{name}\"";
+                Logger.LogTrace(message);
+            }
+            else if (currentStatus != Status.OK       &&
+                     currentStatus != Status.Canceled &&
+                     currentStatus != Status.Disabled &&
+                     currentStatus != Status.Canceled)
+            {
+                var message = $"[{currentStatus}]      \"{name}\"";
+                Logger.LogTrace(message);
+            }
+
+            request.Context.Status      = currentStatus;
             request.Context.URL         = job.URL;
             request.Context.BuildNumber = job.BuildNumber;
             request.Context.FinishTime  = DateTimeOffset.FromUnixTimeMilliseconds(job.Timestamp).UtcDateTime;

@@ -30,21 +30,34 @@ namespace AnyStatus.Plugins.Jenkins.API.Models
             }
         }
 
-        public string BuildNumber { get; set; }
-
-        public int Duration { get; set; }
-
-        public int EstimatedDuration { get; set; }
-
-        public long Timestamp { get; set; }
-
-        public string Result { get; set; }
-
-        public JenkinsJobProgress Executor { get; set; }
+        public string             BuildNumber       { get; set; }
+        public int                Duration          { get; set; }
+        public int                EstimatedDuration { get; set; }
+        public long               Timestamp         { get; set; }
+        public string             Result            { get; set; }
+        public bool               InProgress        { get; set; } // different between v1 and v2
+        public JenkinsJobProgress Executor          { get; set; }
 
         [JsonProperty("building")] public bool IsRunning { get; set; }
 
-        public string Status => IsRunning
+        public bool IsCurrentlyRunning() => IsRunning || InProgress;
+
+        public TimeSpan GetCurrentlyRunningDuration()
+        {
+            if (!IsCurrentlyRunning())
+            {
+                return TimeSpan.Zero;
+            }
+
+            var start    = DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).DateTime;
+            var startUtc = DateTime.SpecifyKind(start, DateTimeKind.Utc);
+            var now      = DateTime.UtcNow;
+            var duration = now - start;
+            return duration;
+
+        }
+
+        public string Status => IsCurrentlyRunning()
             ? AnyStatus.API.Widgets.Status.Running
             : Result switch
               {

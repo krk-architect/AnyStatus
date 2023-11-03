@@ -1,5 +1,8 @@
-﻿namespace AnyStatus.API.Notifications
+﻿using System.Diagnostics;
+
+namespace AnyStatus.API.Notifications
 {
+    [DebuggerDisplay("{Title}  |  {Message}  |  {Icon}")]
     public class Notification
     {
         public Notification(string message)

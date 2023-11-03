@@ -6,22 +6,27 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace AnyStatus.API.Widgets
 {
+    [DebuggerDisplay("{Id}  |  {Name}  |  {RefreshSeconds} seconds  |  Status={Status}  |  Children={Count}  |  Parent={Parent?.Name}")]
     [JsonObject]
     public abstract class Widget : ObservableCollection<IWidget>, IWidget
     {
+        public const int DefaultRefreshSeconds = 30;
+
         #region Fields
 
-        private string _name;
-        private string _status;
+        private string  _name;
+        private int     _refreshSeconds = DefaultRefreshSeconds;
+        private string  _status;
         private IWidget _parent;
-        private bool _isExpanded;
-        private bool _isEnabled = true;
+        private bool    _isExpanded;
+        private bool    _isEnabled = true;
 
 #pragma warning disable IDE0051
         [JsonProperty] private IList<IWidget> Data => Items;
@@ -40,6 +45,12 @@ namespace AnyStatus.API.Widgets
         {
             get => _name;
             set => Set(ref _name, value);
+        }
+
+        public int RefreshSeconds
+        {
+            get => _refreshSeconds;
+            set => Set(ref _refreshSeconds, value);
         }
 
         [Browsable(false)]

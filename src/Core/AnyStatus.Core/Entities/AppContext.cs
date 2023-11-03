@@ -3,9 +3,11 @@ using AnyStatus.API.Endpoints;
 using AnyStatus.Core.Sessions;
 using AnyStatus.Core.Settings;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace AnyStatus.Core.App
 {
+    [DebuggerDisplay("{Session}  ###  {(Endpoints?.Count ?? 0)} Endpoints")]
     public class AppContext : NotifyPropertyChanged, IAppContext
     {
         private Session _session;

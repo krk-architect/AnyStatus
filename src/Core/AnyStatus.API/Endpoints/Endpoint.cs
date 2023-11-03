@@ -2,9 +2,11 @@
 using AnyStatus.API.Common;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace AnyStatus.API.Endpoints
 {
+    [DebuggerDisplay("{Id}  |  {Name}  |  {Address}")]
     public abstract class Endpoint : NotifyPropertyChanged, IEndpoint
     {
         private string _id;

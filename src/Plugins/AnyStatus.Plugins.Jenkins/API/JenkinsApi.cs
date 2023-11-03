@@ -54,7 +54,7 @@ namespace AnyStatus.Plugins.Jenkins.API
         {
             var request = new RestRequest(_endpoint.Address + job + "lastBuild/api/json");//todo: remove redundant _endpoint.Address
 
-            request.AddParameter("tree", "result,building,executor[progress],url,duration,estimatedDuration,timestamp");
+            request.AddParameter("tree", "result,building,executor[progress],url,duration,estimatedDuration,timestamp,inProgress");
 
             return ExecuteAsync<JenkinsJob>(request, cancellationToken);
         }

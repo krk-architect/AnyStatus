@@ -1,9 +1,11 @@
-﻿using AnyStatus.API.Common;
+﻿using System.Diagnostics;
+using AnyStatus.API.Common;
 using AnyStatus.API.Widgets;
 using Newtonsoft.Json;
 
 namespace AnyStatus.Core.Sessions
 {
+    [DebuggerDisplay("Widget={Widget}  ***  SelectedWidget={SelectedWidget}  ***  IsDirty={IsDirty}")]
     public class Session : NotifyPropertyChanged
     {
         private bool _isDirty;

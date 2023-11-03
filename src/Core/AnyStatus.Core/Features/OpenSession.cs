@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,11 +16,13 @@ namespace AnyStatus.Core.Features
 {
     public class OpenSession
     {
+        [DebuggerDisplay("{FileName}")]
         public class Request : IRequest<bool>
         {
             public string FileName { get; set; }
         }
 
+        [DebuggerDisplay("{_context}")]
         public class Handler : IRequestHandler<Request, bool>
         {
             private readonly ILogger _logger;
@@ -100,7 +103,7 @@ namespace AnyStatus.Core.Features
                 {
                     throw new FileNotFoundException(fileName);
                 }
-                
+
                 var json = File.ReadAllText(fileName);
 
                 if (string.IsNullOrWhiteSpace(json))

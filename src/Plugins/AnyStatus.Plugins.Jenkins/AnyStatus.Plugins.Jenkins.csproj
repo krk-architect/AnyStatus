@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\AnyStatus.API\AnyStatus.API.csproj" />
+    <ProjectReference Include="..\..\Core\AnyStatus.Core\AnyStatus.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

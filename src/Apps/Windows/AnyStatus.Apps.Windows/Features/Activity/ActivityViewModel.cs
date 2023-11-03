@@ -15,7 +15,7 @@ namespace AnyStatus.Apps.Windows.Features.Activity
         {
             _dispatcher = dispatcher;
 
-            _subscription = logger.LogEntries.Subscribe(logEntry => _dispatcher.Invoke(() => LogEntries.Add(logEntry)));
+            _subscription = logger.LogEntries.Subscribe(logEntry => _dispatcher.Invoke(() => AddLogEntry(logEntry)));
 
             Commands.Add("Clear", new Command(_ => _dispatcher.Invoke(LogEntries.Clear), _ => LogEntries.Count > 0));
         }
@@ -23,5 +23,10 @@ namespace AnyStatus.Apps.Windows.Features.Activity
         public void Dispose() => _subscription.Dispose();
 
         public ObservableCollection<LogEntry> LogEntries { get; } = new();
+
+        private void AddLogEntry(LogEntry logEntry)
+        {
+            LogEntries.Add(logEntry);
+        }
     }
 }

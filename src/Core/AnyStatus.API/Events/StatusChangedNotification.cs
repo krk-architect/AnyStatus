@@ -1,6 +1,7 @@
 ﻿using AnyStatus.API.Widgets;
 using MediatR;
 using System;
+using System.Diagnostics;
 
 namespace AnyStatus.API.Events
 {
@@ -14,6 +15,7 @@ namespace AnyStatus.API.Events
         }
     }
 
+    [DebuggerDisplay("{Widget}")]
     public class StatusChangedNotification<TWidget> : INotification where TWidget : class, IWidget
     {
         public StatusChangedNotification(TWidget widget)

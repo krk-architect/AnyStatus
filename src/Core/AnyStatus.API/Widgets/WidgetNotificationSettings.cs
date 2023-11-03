@@ -1,7 +1,9 @@
-﻿using AnyStatus.API.Common;
+﻿using System.Diagnostics;
+using AnyStatus.API.Common;
 
 namespace AnyStatus.API.Widgets
 {
+    [DebuggerDisplay("{IsEnabled}")]
     public class WidgetNotificationSettings : NotifyPropertyChanged
     {
         private bool _isEnabled;
