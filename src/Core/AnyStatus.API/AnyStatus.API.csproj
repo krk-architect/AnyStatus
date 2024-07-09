@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<PackageId>AnyStatus.API</PackageId>
-		<LangVersion>9.0</LangVersion>
 		<Version>1.0.0</Version>
 		<PackageVersion>1.0.0</PackageVersion>
 		<Authors>AnyStatus</Authors>
@@ -14,17 +13,17 @@
 		<PackageProjectUrl>https://www.anystat.us</PackageProjectUrl>
 		<PackageIconUrl>http://www.anystat.us/assets/images/logo_128px.png</PackageIconUrl>
 		<Copyright>Copyright © Alon Amsalem</Copyright>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+		<TargetFramework>net8.0</TargetFramework>
+		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="mediatr" Version="8.0.0" />
-		<PackageReference Include="AutoMapper" Version="10.1.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 	</ItemGroup>
-	
+
 </Project>

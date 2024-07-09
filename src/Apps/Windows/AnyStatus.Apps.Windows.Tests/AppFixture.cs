@@ -33,7 +33,7 @@ public sealed class AppFixture : IDisposable
 #else
             const string config = "Release";
 #endif
-        var path = Path.Combine(Directory.GetCurrentDirectory(), $@"..\..\..\..\AnyStatus.Apps.Windows\bin\x64\{config}\net6.0-windows10.0.19041\AnyStatus.exe");
+        var path = Path.Combine(Directory.GetCurrentDirectory(), $@"..\..\..\..\AnyStatus.Apps.Windows\bin\x64\{config}\net8.0-windows10.0.22621\AnyStatus.exe");
 
         if (!File.Exists(path))
         {
