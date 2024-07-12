@@ -1,20 +1,19 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-namespace AnyStatus.Plugins.SystemInformation.Network
+namespace AnyStatus.Plugins.SystemInformation.Network;
+
+public static class BytesFormatter
 {
-    public static class BytesFormatter
+    [DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
+    private static extern long StrFormatByteSizeW(long qdw, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszBuf, int cchBuf);
+
+    public static string Format(long bytes)
     {
-        [DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
-        private static extern long StrFormatByteSizeW(long qdw, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszBuf, int cchBuf);
+        var sb = new StringBuilder(32);
 
-        public static string Format(long bytes)
-        {
-            var sb = new StringBuilder(32);
+        StrFormatByteSizeW(bytes, sb, sb.Capacity);
 
-            StrFormatByteSizeW(bytes, sb, sb.Capacity);
-
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

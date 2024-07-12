@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface IConfigurable
-    {
-    }
-}
+﻿namespace AnyStatus.API.Widgets;
+
+public interface IConfigurable { }

@@ -1,35 +1,40 @@
-﻿using AnyStatus.API.Attributes;
-using AnyStatus.API.Endpoints;
-using AnyStatus.Plugins.Azure.API.Endpoints;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AnyStatus.API.Attributes;
+using AnyStatus.API.Endpoints;
+using AnyStatus.Plugins.Azure.API.Endpoints;
 
-namespace AnyStatus.Plugins.Azure.API.Sources
+namespace AnyStatus.Plugins.Azure.API.Sources;
+
+internal class AzureDevOpsReleaseSource : IAsyncItemsSource
 {
-    internal class AzureDevOpsReleaseSource : IAsyncItemsSource
+    private readonly IEndpointProvider _endpointProvider;
+
+    public AzureDevOpsReleaseSource(IEndpointProvider endpointProvider)
     {
-        private readonly IEndpointProvider _endpointProvider;
+        _endpointProvider = endpointProvider;
+    }
 
-        public AzureDevOpsReleaseSource(IEndpointProvider endpointProvider) => _endpointProvider = endpointProvider;
-
-        public async Task<IEnumerable<NameValueItem>> GetItemsAsync(object source)
+    public async Task<IEnumerable<NameValueItem>> GetItemsAsync(object source)
+    {
+        if (source is IAzureDevOpsWidget widget
+         && !string.IsNullOrEmpty(widget.EndpointId)
+         && !string.IsNullOrEmpty(widget.Account)
+         && !string.IsNullOrEmpty(widget.Project))
         {
-            if (source is IAzureDevOpsWidget widget && !string.IsNullOrEmpty(widget.EndpointId) && !string.IsNullOrEmpty(widget.Account) && !string.IsNullOrEmpty(widget.Project))
+            var endpoint = _endpointProvider.GetEndpoint<IAzureDevOpsEndpoint>(widget.EndpointId);
+
+            if (endpoint != null)
             {
-                var endpoint = _endpointProvider.GetEndpoint<IAzureDevOpsEndpoint>(widget.EndpointId);
+                var api = new AzureDevOpsApi(endpoint);
 
-                if (endpoint != null)
-                {
-                    var api = new AzureDevOpsApi(endpoint);
+                var releases = await api.GetReleaseDefinitionsAsync(widget.Account, widget.Project);
 
-                    var releases = await api.GetReleaseDefinitionsAsync(widget.Account, widget.Project);
-
-                    return releases?.Value?.Select(p => new NameValueItem(p.Name, p.Id)).ToList();
-                }
+                return releases?.Value?.Select(p => new NameValueItem(p.Name, p.Id)).ToList();
             }
-
-            return null;
         }
+
+        return null;
     }
 }

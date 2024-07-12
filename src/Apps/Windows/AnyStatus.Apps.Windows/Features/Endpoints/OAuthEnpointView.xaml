@@ -7,9 +7,9 @@
     <wv2:WebView2 Source="{Binding Endpoint.AuthorizeURL}">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="NavigationStarting">
-                <i:CallMethodAction TargetObject="{Binding}" MethodName="HandleBrowserNavigation"/>
+                <i:CallMethodAction TargetObject="{Binding}" MethodName="HandleBrowserNavigation" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
     </wv2:WebView2>
-    
+
 </UserControl>

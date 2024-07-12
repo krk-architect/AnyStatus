@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Dashboard.Controls
+namespace AnyStatus.Apps.Windows.Features.Dashboard.Controls;
+
+public partial class ColorStatusIndicator : UserControl
 {
-    public partial class ColorStatusIndicator : UserControl
-    {
-        public ColorStatusIndicator()
-        {
-            InitializeComponent();
-        }
-    }
+    public ColorStatusIndicator() { InitializeComponent(); }
 }

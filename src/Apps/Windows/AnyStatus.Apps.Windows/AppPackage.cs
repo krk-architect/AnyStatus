@@ -19,36 +19,35 @@ using MediatR;
 using SimpleInjector;
 using SimpleInjector.Packaging;
 
-namespace AnyStatus.Apps.Windows
+namespace AnyStatus.Apps.Windows;
+
+internal class AppPackage : IPackage
 {
-    internal class AppPackage : IPackage
+    public void RegisterServices(Container container)
     {
-        public void RegisterServices(Container container)
-        {
-            container.RegisterSingleton<IApp, App>();
-            container.RegisterSingleton<IDispatcher, Dispatcher>();
-            container.RegisterSingleton<ISystemTray, SystemTray>();
-            container.RegisterSingleton<INamedPipeClient, NamedPipeClient>();
-            container.RegisterSingleton<INamedPipeServer, NamedPipeServer>();
-            container.RegisterSingleton<INotificationService, NotificationService>();
+        container.RegisterSingleton<IApp, App>();
+        container.RegisterSingleton<IDispatcher, Dispatcher>();
+        container.RegisterSingleton<ISystemTray, SystemTray>();
+        container.RegisterSingleton<INamedPipeClient, NamedPipeClient>();
+        container.RegisterSingleton<INamedPipeServer, NamedPipeServer>();
+        container.RegisterSingleton<INotificationService, NotificationService>();
 
-            container.Register<IDialogService, DialogService>();
-            container.Register<IEndpointViewModel, EndpointViewModel>();
-            container.Register<IPropertyGridViewModel, PropertyGridViewModel>();
-            container.Register<IPropertyViewModelBuilder, PropertyViewModelBuilder>();
-            container.Register<IEndpointViewModelFactory, EndpointViewModelFactory>();
-            container.Register(typeof(IRequestHandler<,>), typeof(PageHandler<>));
+        container.Register<IDialogService, DialogService>();
+        container.Register<IEndpointViewModel, EndpointViewModel>();
+        container.Register<IPropertyGridViewModel, PropertyGridViewModel>();
+        container.Register<IPropertyViewModelBuilder, PropertyViewModelBuilder>();
+        container.Register<IEndpointViewModelFactory, EndpointViewModelFactory>();
+        container.Register(typeof(IRequestHandler<,>), typeof(PageHandler<>));
 
-            container.Collection.Append(typeof(IPipelineBehavior<,>), typeof(ContextMenuBehavior<,,>));
+        container.Collection.Append(typeof(IPipelineBehavior<,>), typeof(ContextMenuBehavior<,,>));
 
-            container.RegisterInitializer<AppViewModel>(vm =>
-            {
-                vm.MenuViewModel = container.GetInstance<MenuViewModel>();
-                vm.PagesViewModel = container.GetInstance<PagesViewModel>();
-                vm.ToolBarViewModel = container.GetInstance<ToolBarViewModel>();
-                vm.DashboardViewModel = container.GetInstance<DashboardViewModel>();
-                vm.ToolBarViewModel.MenuViewModel = vm.MenuViewModel;
-            });
-        }
+        container.RegisterInitializer<AppViewModel>(vm =>
+                                                    {
+                                                        vm.MenuViewModel                  = container.GetInstance<MenuViewModel>();
+                                                        vm.PagesViewModel                 = container.GetInstance<PagesViewModel>();
+                                                        vm.ToolBarViewModel               = container.GetInstance<ToolBarViewModel>();
+                                                        vm.DashboardViewModel             = container.GetInstance<DashboardViewModel>();
+                                                        vm.ToolBarViewModel.MenuViewModel = vm.MenuViewModel;
+                                                    });
     }
 }

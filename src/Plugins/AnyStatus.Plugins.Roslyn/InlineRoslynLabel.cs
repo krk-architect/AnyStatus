@@ -1,32 +1,32 @@
-﻿using AnyStatus.API.Widgets;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 
-namespace AnyStatus.Plugins.Roslyn
+namespace AnyStatus.Plugins.Roslyn;
+
+[Category("Roslyn")]
+[DisplayName("Inline Roslyn Text Label")]
+[Description("Run an inline Roslyn script to update the label of a widget")]
+public class InlineRoslynLabel : TextWidget, ICommonWidget, IPollable
 {
-    [Category("Roslyn")]
-    [DisplayName("Inline Roslyn Text Label")]
-    [Description("Run an inline Roslyn script to update the label of a widget")]
-    public class InlineRoslynLabel : TextWidget, ICommonWidget, IPollable
+    public string Script { get; set; }
+
+    public string Expected { get; set; }
+}
+
+public class AsyncInlineRoslynLabelUpdater : AsyncStatusCheck<InlineRoslynLabel>
+{
+    protected override async Task Handle(StatusRequest<InlineRoslynLabel> request, CancellationToken cancellationToken)
     {
-        public string Script { get; set; }
+        var result = await CSharpScript.EvaluateAsync(request.Context.Script).ConfigureAwait(false);
 
-        public string Expected { get; set; }
-    }
+        request.Context.Text = result.ToString();
 
-    public class AsyncInlineRoslynLabelUpdater : AsyncStatusCheck<InlineRoslynLabel>
-    {
-        protected override async Task Handle(StatusRequest<InlineRoslynLabel> request, CancellationToken cancellationToken)
-        {
-            var result = await CSharpScript.EvaluateAsync(request.Context.Script).ConfigureAwait(false);
-
-            request.Context.Text = result.ToString();
-
-            request.Context.Status = string.IsNullOrWhiteSpace(request.Context.Expected) || request.Context.Text == request.Context.Expected ?
-                Status.OK :
-                Status.Failed;
-        }
+        request.Context.Status = string.IsNullOrWhiteSpace(request.Context.Expected)
+                              || request.Context.Text == request.Context.Expected
+                                     ? Status.OK
+                                     : Status.Failed;
     }
 }

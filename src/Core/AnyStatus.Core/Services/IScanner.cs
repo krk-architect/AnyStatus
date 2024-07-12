@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.Core.Services
-{
-    public interface IScanner
-    {
-    }
-}
+﻿namespace AnyStatus.Core.Services;
+
+public interface IScanner { }

@@ -1,11 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace AnyStatus.API.Dialogs;
 
-namespace AnyStatus.API.Dialogs
+public class ErrorDialog : Dialog
 {
-    public class ErrorDialog : Dialog
-    {
-        public ErrorDialog(string message) : base(message) { }
+    public ErrorDialog(string message) : base(message) { }
 
-        public ErrorDialog(string message, string title) : base(message, title) { }
-    }
+    public ErrorDialog(string message, string title) : base(message, title) { }
 }

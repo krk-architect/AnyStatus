@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Plugins.Azure.API.Contracts
+﻿namespace AnyStatus.Plugins.Azure.API.Contracts;
+
+internal class Approval
 {
-    internal class Approval
-    {
-        public string Status { get; set; }
-    }
+    public string Status { get; set; }
 }

@@ -1,50 +1,49 @@
-﻿using AnyStatus.Core.App;
-using MediatR;
-using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.Core.App;
+using MediatR;
+using Newtonsoft.Json;
 
-namespace AnyStatus.Core.Features
+namespace AnyStatus.Core.Features;
+
+public class SaveSession
 {
-    public class SaveSession
+    public class Request : IRequest<bool> { }
+
+    public class Handler : IRequestHandler<Request, bool>
     {
-        public class Request : IRequest<bool> { }
+        private readonly IAppSettings _appSettings;
+        private readonly IAppContext  _context;
 
-        public class Handler : IRequestHandler<Request, bool>
+        public Handler(IAppSettings appSettings, IAppContext context)
         {
-            private readonly IAppContext _context;
-            private readonly IAppSettings _appSettings;
+            _context     = context;
+            _appSettings = appSettings;
+        }
 
-            public Handler(IAppSettings appSettings, IAppContext context)
+        public async Task<bool> Handle(Request request, CancellationToken cancellationToken)
+        {
+            var directory = Path.GetDirectoryName(_appSettings.SessionFilePath);
+
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                _context = context;
-                _appSettings = appSettings;
+                Directory.CreateDirectory(directory);
             }
 
-            public async Task<bool> Handle(Request request, CancellationToken cancellationToken)
+            var json = JsonConvert.SerializeObject(_context.Session, Formatting.Indented);
+
+            var bytes = new UTF8Encoding().GetBytes(json);
+
+            using (var stream = File.Open(_appSettings.SessionFilePath, FileMode.Create))
             {
-                var directory = Path.GetDirectoryName(_appSettings.SessionFilePath);
+                stream.Seek(0, SeekOrigin.End);
 
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                var json = JsonConvert.SerializeObject(_context.Session, Formatting.Indented);
-
-                var bytes = new UTF8Encoding().GetBytes(json);
-
-                using (var stream = File.Open(_appSettings.SessionFilePath, FileMode.Create))
-                {
-                    stream.Seek(0, SeekOrigin.End);
-
-                    await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
-                }
-
-                return true;
+                await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
             }
+
+            return true;
         }
     }
 }

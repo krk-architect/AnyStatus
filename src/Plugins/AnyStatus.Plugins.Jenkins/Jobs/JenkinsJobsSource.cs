@@ -1,34 +1,37 @@
-﻿using AnyStatus.API.Attributes;
-using AnyStatus.API.Endpoints;
-using AnyStatus.Plugins.Jenkins.API;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AnyStatus.API.Attributes;
+using AnyStatus.API.Endpoints;
+using AnyStatus.Plugins.Jenkins.API;
 
-namespace AnyStatus.Plugins.Jenkins.Jobs
+namespace AnyStatus.Plugins.Jenkins.Jobs;
+
+public class JenkinsJobsSource : IAsyncItemsSource
 {
-    public class JenkinsJobsSource : IAsyncItemsSource
+    private readonly IEndpointProvider _endpointsProvider;
+
+    public JenkinsJobsSource(IEndpointProvider endpointsProvider) { _endpointsProvider = endpointsProvider; }
+
+    public async Task<IEnumerable<NameValueItem>> GetItemsAsync(object source)
     {
-        private readonly IEndpointProvider _endpointsProvider;
+        var results = new List<NameValueItem>();
 
-        public JenkinsJobsSource(IEndpointProvider endpointsProvider) => _endpointsProvider = endpointsProvider;
-
-        public async Task<IEnumerable<NameValueItem>> GetItemsAsync(object source)
+        if (source is JenkinsJobWidget widget
+         && !string.IsNullOrEmpty(widget.EndpointId)
+         && _endpointsProvider.GetEndpoint(widget.EndpointId) is JenkinsEndpoint endpoint)
         {
-            List<NameValueItem> results = new List<NameValueItem>();
+            var response    = await new JenkinsApi(endpoint).GetJobsAsync(default);
+            var endpointUri = new Uri(endpoint.Address.EndsWith('/')
+                                          ? endpoint.Address
+                                          : endpoint.Address + '/');
 
-            if (source is JenkinsJobWidget widget && !string.IsNullOrEmpty(widget.EndpointId) && _endpointsProvider.GetEndpoint(widget.EndpointId) is JenkinsEndpoint endpoint)
+            foreach (var job in response.Jobs)
             {
-                var response = await new JenkinsApi(endpoint).GetJobsAsync(default);
-                var endpointUri = new Uri(endpoint.Address.EndsWith('/') ? endpoint.Address : endpoint.Address + '/');
-
-                foreach (var job in response.Jobs)
-                {
-                    results.Add(new NameValueItem($"{job.Name}", '/' + endpointUri.MakeRelativeUri(new Uri(job.URL)).ToString()));
-                }
+                results.Add(new ($"{job.Name}", '/' + endpointUri.MakeRelativeUri(new (job.URL)).ToString()));
             }
-
-            return results;
         }
+
+        return results;
     }
 }

@@ -1,19 +1,20 @@
-﻿using AnyStatus.API.Widgets;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
 
-namespace AnyStatus.Plugins.HealthChecks
+namespace AnyStatus.Plugins.HealthChecks;
+
+public class PingHealthCheck : AsyncStatusCheck<PingHealthCheckWidget>
 {
-    public class PingHealthCheck : AsyncStatusCheck<PingHealthCheckWidget>
+    protected override async Task Handle(StatusRequest<PingHealthCheckWidget> request, CancellationToken cancellationToken)
     {
-        protected override async Task Handle(StatusRequest<PingHealthCheckWidget> request, CancellationToken cancellationToken)
-        {
-            using var ping = new Ping();
+        using var ping = new Ping();
 
-            var reply = await ping.SendPingAsync(request.Context.Host).ConfigureAwait(false);
+        var reply = await ping.SendPingAsync(request.Context.Host).ConfigureAwait(false);
 
-            request.Context.Status = (reply.Status == IPStatus.Success) ? Status.OK : Status.Failed;
-        }
+        request.Context.Status = reply.Status == IPStatus.Success
+                                     ? Status.OK
+                                     : Status.Failed;
     }
 }

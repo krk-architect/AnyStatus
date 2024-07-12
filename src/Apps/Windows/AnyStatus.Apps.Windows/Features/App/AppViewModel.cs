@@ -1,4 +1,5 @@
-﻿using AnyStatus.Apps.Windows.Features.Dashboard;
+﻿using System;
+using AnyStatus.Apps.Windows.Features.Dashboard;
 using AnyStatus.Apps.Windows.Features.Menu;
 using AnyStatus.Apps.Windows.Features.ToolBar;
 using AnyStatus.Apps.Windows.Infrastructure.Mvvm;
@@ -6,29 +7,24 @@ using AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages;
 using AnyStatus.Core.App;
 using AnyStatus.Core.Features;
 using MediatR;
-using System;
 
-namespace AnyStatus.Apps.Windows.Features.App
+namespace AnyStatus.Apps.Windows.Features.App;
+
+public sealed class AppViewModel : BaseViewModel, IDisposable
 {
-    public sealed class AppViewModel : BaseViewModel, IDisposable
+    public AppViewModel(IMediator mediator, IAppContext context) { Commands.Add("Refresh", new Command(async _ => await mediator.Send(new Refresh.Request(context.Session?.Widget)))); }
+
+    public MenuViewModel      MenuViewModel      { get; set; }
+    public PagesViewModel     PagesViewModel     { get; set; }
+    public ToolBarViewModel   ToolBarViewModel   { get; set; }
+    public DashboardViewModel DashboardViewModel { get; set; }
+
+    public void Dispose()
     {
-        public AppViewModel(IMediator mediator, IAppContext context)
-        {
-            Commands.Add("Refresh", new Command(async _ => await mediator.Send(new Refresh.Request(context.Session?.Widget))));
-        }
-
-        public void Dispose()
-        {
-            MenuViewModel = null;
-            PagesViewModel = null;
-            ToolBarViewModel = null;
-            DashboardViewModel = null;
-            Commands.Clear();
-        }
-
-        public MenuViewModel MenuViewModel { get; set; }
-        public PagesViewModel PagesViewModel { get; set; }
-        public ToolBarViewModel ToolBarViewModel { get; set; }
-        public DashboardViewModel DashboardViewModel { get; set; }
+        MenuViewModel      = null;
+        PagesViewModel     = null;
+        ToolBarViewModel   = null;
+        DashboardViewModel = null;
+        Commands.Clear();
     }
 }

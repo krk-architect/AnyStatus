@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AnyStatus.API.Attributes
+namespace AnyStatus.API.Attributes;
+
+public interface IAsyncItemsSource
 {
-    public interface IAsyncItemsSource
-    {
-        Task<IEnumerable<NameValueItem>> GetItemsAsync(object source);
-    }
+    Task<IEnumerable<NameValueItem>> GetItemsAsync(object source);
 }

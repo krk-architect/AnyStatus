@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.API.Widgets
+﻿namespace AnyStatus.API.Widgets;
+
+public interface IOpenInApp
 {
-    public interface IOpenInApp
-    {
-        string URL { get; }
-    }
+    string URL { get; }
 }

@@ -1,21 +1,23 @@
-﻿using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
+using Newtonsoft.Json.Serialization;
 
-namespace AnyStatus.Core.Serialization
+namespace AnyStatus.Core.Serialization;
+
+public class ContractResolver : DefaultContractResolver
 {
-    public class ContractResolver : DefaultContractResolver
+    private readonly IServiceProvider _serviceProvider;
+
+    public ContractResolver(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public ContractResolver(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+    protected override JsonObjectContract CreateObjectContract(Type type)
+    {
+        var contract = base.CreateObjectContract(type);
 
-        protected override JsonObjectContract CreateObjectContract(Type type)
-        {
-            var contract = base.CreateObjectContract(type);
+        contract.DefaultCreator = () => _serviceProvider.GetService(type);
 
-            contract.DefaultCreator = () => _serviceProvider.GetService(type);
-
-            return contract;
-        }
+        return contract;
     }
 }

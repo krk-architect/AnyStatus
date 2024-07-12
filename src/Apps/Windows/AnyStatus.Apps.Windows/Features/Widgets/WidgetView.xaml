@@ -4,7 +4,7 @@
              xmlns:propertygrid="clr-namespace:AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid">
     <ScrollViewer>
         <StackPanel Margin="10">
-            <propertygrid:PropertyGridControl DataContext="{Binding PropertyGridViewModel}"/>
+            <propertygrid:PropertyGridControl DataContext="{Binding PropertyGridViewModel}" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

@@ -1,53 +1,50 @@
-﻿using AnyStatus.API.Endpoints;
-using AnyStatus.Core.Services;
-using MediatR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using AnyStatus.API.Endpoints;
+using AnyStatus.Core.Services;
+using MediatR;
 
-namespace AnyStatus.Apps.Windows.Features.Endpoints
+namespace AnyStatus.Apps.Windows.Features.Endpoints;
+
+internal class GetEndpointTypes
 {
-    internal class GetEndpointTypes
+    internal class Request : IRequest<Response> { }
+
+    internal class Response
     {
-        internal class Request : IRequest<Response>
-        {
-        }
+        public Response(IEnumerable<EndpointTypeDescription> types) { Types = types; }
 
-        internal class Response
-        {
-            public Response(IEnumerable<EndpointTypeDescription> types) => Types = types;
+        public IEnumerable<EndpointTypeDescription> Types { get; }
+    }
 
-            public IEnumerable<EndpointTypeDescription> Types { get; }
-        }
-
-        internal class Handler : RequestHandler<Request, Response>
+    internal class Handler : RequestHandler<Request, Response>
+    {
+        protected override Response Handle(Request request)
         {
-            protected override Response Handle(Request request)
+            var types = Scanner.GetTypesOf<IEndpoint>();
+
+            var descriptions = new List<EndpointTypeDescription>();
+
+            foreach (var type in types)
             {
-                var types = Scanner.GetTypesOf<IEndpoint>();
+                var browsableAttribute = type.GetCustomAttribute<BrowsableAttribute>();
 
-                var descriptions = new List<EndpointTypeDescription>();
-
-                foreach (var type in types)
+                if (browsableAttribute?.Browsable == false)
                 {
-                    var browsableAttribute = type.GetCustomAttribute<BrowsableAttribute>();
-
-                    if (browsableAttribute?.Browsable == false)
-                    {
-                        continue;
-                    }
-
-                    var nameAttribute = type.GetCustomAttribute<DisplayNameAttribute>();
-
-                    descriptions.Add(new EndpointTypeDescription
-                    {
-                        Type = type,
-                        Name = string.IsNullOrWhiteSpace(nameAttribute?.DisplayName) ? type.Name : nameAttribute.DisplayName,
-                    });
+                    continue;
                 }
 
-                return new Response(descriptions);
+                var nameAttribute = type.GetCustomAttribute<DisplayNameAttribute>();
+
+                descriptions.Add(new()
+                                 {
+                                     Type = type
+                                   , Name = string.IsNullOrWhiteSpace(nameAttribute?.DisplayName) ? type.Name : nameAttribute.DisplayName
+                                 });
             }
+
+            return new (descriptions);
         }
     }
 }

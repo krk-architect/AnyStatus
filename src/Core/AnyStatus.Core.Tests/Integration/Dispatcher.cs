@@ -1,12 +1,11 @@
-﻿using AnyStatus.API.Services;
-using System;
+﻿using System;
+using AnyStatus.API.Services;
 
-namespace AnyStatus.Core.Tests.Integration
+namespace AnyStatus.Core.Tests.Integration;
+
+internal class Dispatcher : IDispatcher
 {
-    internal class Dispatcher : IDispatcher
-    {
-        public void Invoke(Action callback) => callback();
+    public void Invoke(Action callback) => callback();
 
-        public void InvokeAsync(Action callback) => callback();
-    }
+    public void InvokeAsync(Action callback) => callback();
 }

@@ -10,14 +10,14 @@
              d:DataContext="{d:DesignInstance Type=widgets:Widget, IsDesignTimeCreatable=False}">
     <DockPanel Style="{DynamicResource WidgetPanel}">
         <iconPacks:PackIconControl
-	        DockPanel.Dock="Left"
-	        Margin="0,5,10,5"
-	        Width="16"
-	        Height="16"
-	        VerticalAlignment="Center"
-	        HorizontalAlignment="Center"
-	        Foreground="gray"
-	        Kind="{x:Static iconPacks:PackIconFontistoKind.Folder}" />
+            DockPanel.Dock="Left"
+            Margin="0,5,10,5"
+            Width="16"
+            Height="16"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Foreground="gray"
+            Kind="{x:Static iconPacks:PackIconFontistoKind.Folder}" />
         <controls:ColorStatusIndicator DockPanel.Dock="Left" />
         <controls:IconStatusIndicator DockPanel.Dock="Left" />
         <TextBlock Text="{Binding Count}"
@@ -25,10 +25,10 @@
                    DockPanel.Dock="Right"
                    Margin="12,5,12,5"
                    HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+                   VerticalAlignment="Center" />
         <TextBlock Margin="7,0,0,0"
                    Text="{Binding Name}"
                    TextTrimming="CharacterEllipsis"
-                   VerticalAlignment="Center"/>
+                   VerticalAlignment="Center" />
     </DockPanel>
 </UserControl>

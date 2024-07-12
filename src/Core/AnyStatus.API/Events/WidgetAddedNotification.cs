@@ -1,18 +1,17 @@
-﻿using AnyStatus.API.Widgets;
-using MediatR;
-using System;
+﻿using System;
 using System.Diagnostics;
+using AnyStatus.API.Widgets;
+using MediatR;
 
-namespace AnyStatus.API.Events
+namespace AnyStatus.API.Events;
+
+[DebuggerDisplay("{Widget}")]
+public class WidgetAddedNotification : INotification
 {
-    [DebuggerDisplay("{Widget}")]
-    public class WidgetAddedNotification : INotification
+    public WidgetAddedNotification(IWidget widget)
     {
-        public WidgetAddedNotification(IWidget widget)
-        {
-            Widget = widget ?? throw new ArgumentNullException(nameof(widget));
-        }
-
-        public IWidget Widget { get; }
+        Widget = widget ?? throw new ArgumentNullException(nameof(widget));
     }
+
+    public IWidget Widget { get; }
 }

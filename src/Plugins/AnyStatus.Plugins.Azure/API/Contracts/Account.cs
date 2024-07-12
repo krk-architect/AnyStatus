@@ -1,11 +1,10 @@
-﻿namespace AnyStatus.Plugins.Azure.API.Contracts
+﻿namespace AnyStatus.Plugins.Azure.API.Contracts;
+
+internal class Account
 {
-    internal class Account
-    {
-        public string AccountId { get; set; }
+    public string AccountId { get; set; }
 
-        public string AccountName { get; set; }
+    public string AccountName { get; set; }
 
-        public string AccountUri { get; set; }
-    }
+    public string AccountUri { get; set; }
 }

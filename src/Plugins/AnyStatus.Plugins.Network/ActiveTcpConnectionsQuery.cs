@@ -1,16 +1,17 @@
-﻿using AnyStatus.API.Widgets;
+﻿using System.Net.NetworkInformation;
+using AnyStatus.API.Widgets;
 using MediatR;
-using System.Net.NetworkInformation;
 
-namespace AnyStatus.Plugins.SystemInformation.Network
+namespace AnyStatus.Plugins.SystemInformation.Network;
+
+public class ActiveTcpConnectionsQuery : RequestHandler<MetricRequest<ActiveTcpConnectionsWidget>>
 {
-    public class ActiveTcpConnectionsQuery : RequestHandler<MetricRequest<ActiveTcpConnectionsWidget>>
+    protected override void Handle(MetricRequest<ActiveTcpConnectionsWidget> request)
     {
-        protected override void Handle(MetricRequest<ActiveTcpConnectionsWidget> request)
-        {
-            request.Context.Value = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Length;
+        request.Context.Value = IPGlobalProperties.GetIPGlobalProperties()
+                                                  .GetActiveTcpConnections()
+                                                  .Length;
 
-            request.Context.Status = Status.OK;
-        }
+        request.Context.Status = Status.OK;
     }
 }

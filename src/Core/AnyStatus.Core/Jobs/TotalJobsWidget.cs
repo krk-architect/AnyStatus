@@ -1,32 +1,34 @@
-﻿using AnyStatus.API.Widgets;
-using Quartz;
-using Quartz.Impl.Matchers;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
+using Quartz;
+using Quartz.Impl.Matchers;
 
-namespace AnyStatus.Plugins.Quartz
+namespace AnyStatus.Plugins.Quartz;
+
+[Category("AnyStatus")]
+[DisplayName("Total Jobs")]
+[Description("Display the total number of scheduled jobs")]
+public class TotalJobsWidget : TextWidget, ICommonWidget, IPollable { }
+
+public class TotalJobsQuery : AsyncStatusCheck<TotalJobsWidget>
 {
-    [Category("AnyStatus")]
-    [DisplayName("Total Jobs")]
-    [Description("Display the total number of scheduled jobs")]
-    public class TotalJobsWidget : TextWidget, ICommonWidget, IPollable { }
+    private readonly ISchedulerFactory _schedulerFactory;
 
-    public class TotalJobsQuery : AsyncStatusCheck<TotalJobsWidget>
+    public TotalJobsQuery(ISchedulerFactory schedulerFactory)
     {
-        private readonly ISchedulerFactory _schedulerFactory;
+        _schedulerFactory = schedulerFactory;
+    }
 
-        public TotalJobsQuery(ISchedulerFactory schedulerFactory) => _schedulerFactory = schedulerFactory;
+    protected override async Task Handle(StatusRequest<TotalJobsWidget> request, CancellationToken cancellationToken)
+    {
+        var scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
 
-        protected override async Task Handle(StatusRequest<TotalJobsWidget> request, CancellationToken cancellationToken)
-        {
-            var scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
+        var keys = await scheduler.GetJobKeys(GroupMatcher<JobKey>.AnyGroup());
 
-            var keys = await scheduler.GetJobKeys(GroupMatcher<JobKey>.AnyGroup());
+        request.Context.Text = keys.Count.ToString();
 
-            request.Context.Text = keys.Count.ToString();
-
-            request.Context.Status = Status.OK;
-        }
+        request.Context.Status = Status.OK;
     }
 }

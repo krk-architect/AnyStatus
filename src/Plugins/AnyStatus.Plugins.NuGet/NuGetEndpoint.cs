@@ -1,15 +1,14 @@
-﻿using AnyStatus.API.Endpoints;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using AnyStatus.API.Endpoints;
 
-namespace AnyStatus.Plugins.NuGet
+namespace AnyStatus.Plugins.NuGet;
+
+[DisplayName("NuGet")]
+public class NuGetEndpoint : Endpoint
 {
-    [DisplayName("NuGet")]
-    public class NuGetEndpoint : Endpoint
+    public NuGetEndpoint()
     {
-        public NuGetEndpoint()
-        {
-            Name = "NuGet";
-            Address = "https://api.nuget.org/v3/index.json";
-        }
+        Name    = "NuGet";
+        Address = "https://api.nuget.org/v3/index.json";
     }
 }

@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface ICopyable
-    {
-    }
-}
+﻿namespace AnyStatus.API.Widgets;
+
+public interface ICopyable { }

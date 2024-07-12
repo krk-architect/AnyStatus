@@ -2,19 +2,18 @@
 using AnyStatus.Plugins.Azure.API.Contracts;
 using AutoMapper;
 
-namespace AnyStatus.Plugins.Azure.WorkItems
+namespace AnyStatus.Plugins.Azure.WorkItems;
+
+public class AzureDevOpsWorkItemsSynchronizer : CollectionSynchronizer<WorkItem, AzureDevOpsWorkItemWidget>
 {
-    public class AzureDevOpsWorkItemsSynchronizer : CollectionSynchronizer<WorkItem, AzureDevOpsWorkItemWidget>
+    public AzureDevOpsWorkItemsSynchronizer(IMapper mapper, AzureDevOpsWorkItemsWidget parent)
     {
-        public AzureDevOpsWorkItemsSynchronizer(IMapper mapper, AzureDevOpsWorkItemsWidget parent)
-        {
-            Compare = (src, widget) => src.Id.Equals(widget.WorkItemId);
+        Compare = (src, widget) => src.Id.Equals(widget.WorkItemId);
 
-            Remove = src => parent.Remove(src);
+        Remove = src => parent.Remove(src);
 
-            Update = (src, widget) => mapper.Map(src, widget);
+        Update = (src, widget) => mapper.Map(src, widget);
 
-            Add = src => parent.Add(mapper.Map<AzureDevOpsWorkItemWidget>(src));
-        }
+        Add = src => parent.Add(mapper.Map<AzureDevOpsWorkItemWidget>(src));
     }
 }

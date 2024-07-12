@@ -8,11 +8,11 @@
     xmlns:converters="clr-namespace:AnyStatus.Apps.Windows.Infrastructure.Converters">
     <ItemsControl ItemsSource="{Binding Properties}">
         <ItemsControl.Resources>
-            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-            <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
-            <StackPanel x:Key="HeaderTemplate" x:Shared="False"  Orientation="Horizontal">
-                <TextBlock Text="{Binding Header}"/>
-                <TextBlock Text="&#160;&#9432;" ToolTip="{Binding Description}" Visibility="{Binding Description, Converter={StaticResource NullVisibilityConverter}}"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+            <StackPanel x:Key="HeaderTemplate" x:Shared="False" Orientation="Horizontal">
+                <TextBlock Text="{Binding Header}" />
+                <TextBlock Text="&#160;&#9432;" ToolTip="{Binding Description}" Visibility="{Binding Description, Converter={StaticResource NullVisibilityConverter}}" />
             </StackPanel>
             <!--  text  -->
             <DataTemplate DataType="{x:Type local:TextPropertyViewModel}">
@@ -27,7 +27,7 @@
                         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Wrap}" Value="True">
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="TextWrapping" Value="Wrap" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -40,7 +40,7 @@
                     Margin="7,0,7,12"
                     Content="{Binding Header}"
                     IsChecked="{Binding Value}"
-                    IsEnabled="{Binding IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"/>
+                    IsEnabled="{Binding IsReadOnly, Converter={StaticResource InverseBooleanConverter}}" />
             </DataTemplate>
             <!--  numeric  -->
             <DataTemplate DataType="{x:Type local:NumericPropertyViewModel}">
@@ -48,7 +48,7 @@
                     Margin="7,0,7,12"
                     Text="{Binding Value}"
                     IsReadOnly="{Binding IsReadOnly}"
-                    ui:ControlHelper.Header="{StaticResource HeaderTemplate}"/>
+                    ui:ControlHelper.Header="{StaticResource HeaderTemplate}" />
             </DataTemplate>
             <!--  drop down  -->
             <DataTemplate DataType="{x:Type local:DropDownPropertyViewModel}">

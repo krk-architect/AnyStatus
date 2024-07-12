@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.API.Attributes
+namespace AnyStatus.API.Attributes;
+
+public interface IItemsSource
 {
-    public interface IItemsSource
-    {
-        IEnumerable<NameValueItem> GetItems(object source);
-    }
+    IEnumerable<NameValueItem> GetItems(object source);
 }

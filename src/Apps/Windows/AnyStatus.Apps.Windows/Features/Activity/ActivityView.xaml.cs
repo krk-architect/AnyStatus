@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Activity
+namespace AnyStatus.Apps.Windows.Features.Activity;
+
+public partial class ActivityView : UserControl
 {
-    public partial class ActivityView : UserControl
-    {
-        public ActivityView()
-        {
-            InitializeComponent();
-        }
-    }
+    public ActivityView() { InitializeComponent(); }
 }

@@ -1,20 +1,18 @@
-﻿using AnyStatus.API.Endpoints;
-using AnyStatus.API.Widgets;
-using Docker.DotNet.Models;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Endpoints;
+using AnyStatus.API.Widgets;
 
-namespace AnyStatus.Plugins.Docker.Containers
+namespace AnyStatus.Plugins.Docker.Containers;
+
+public class StartDockerContainer : AsyncStartRequestHandler<ReadOnlyDockerContainerWidget>, IEndpointHandler<DockerEndpoint>
 {
-    public class StartDockerContainer : AsyncStartRequestHandler<ReadOnlyDockerContainerWidget>, IEndpointHandler<DockerEndpoint>
+    public DockerEndpoint Endpoint { get; set; }
+
+    protected override async Task Handle(StartRequest<ReadOnlyDockerContainerWidget> request, CancellationToken cancellationToken)
     {
-        public DockerEndpoint Endpoint { get; set; }
+        using var client = Endpoint.GetClient();
 
-        protected override async Task Handle(StartRequest<ReadOnlyDockerContainerWidget> request, CancellationToken cancellationToken)
-        {
-            using var client = Endpoint.GetClient();
-
-            await client.Containers.StartContainerAsync(request.Context.ContainerId, new ContainerStartParameters(), cancellationToken);
-        }
+        await client.Containers.StartContainerAsync(request.Context.ContainerId, new (), cancellationToken);
     }
 }

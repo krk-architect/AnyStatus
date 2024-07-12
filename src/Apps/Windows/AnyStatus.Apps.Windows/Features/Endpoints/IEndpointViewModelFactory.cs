@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace AnyStatus.Apps.Windows.Features.Endpoints
+namespace AnyStatus.Apps.Windows.Features.Endpoints;
+
+internal interface IEndpointViewModelFactory
 {
-    internal interface IEndpointViewModelFactory
-    {
-        object Create(Type type);
-    }
+    object Create(Type type);
 }

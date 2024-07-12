@@ -1,43 +1,42 @@
-﻿using AnyStatus.API.Endpoints;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AnyStatus.API.Endpoints;
 using AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages;
 using AutoMapper;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace AnyStatus.Apps.Windows.Features.Endpoints
+namespace AnyStatus.Apps.Windows.Features.Endpoints;
+
+internal class EditEndpoint
 {
-    class EditEndpoint
+    internal class Request : IRequest
     {
-        internal class Request : IRequest
-        {
-            public Request(IEndpoint endpoint) => Endpoint = endpoint;
+        public Request(IEndpoint endpoint) { Endpoint = endpoint; }
 
-            public IEndpoint Endpoint { get; }
+        public IEndpoint Endpoint { get; }
+    }
+
+    internal class Handler : AsyncRequestHandler<Request>
+    {
+        private readonly IMapper            _mapper;
+        private readonly IMediator          _mediator;
+        private readonly IEndpointViewModel _viewModel;
+
+        public Handler(IMediator mediator, IMapper mapper, IEndpointViewModel viewModel)
+        {
+            _mapper    = mapper;
+            _mediator  = mediator;
+            _viewModel = viewModel;
         }
 
-        internal class Handler : AsyncRequestHandler<Request>
+        protected override Task Handle(Request request, CancellationToken cancellationToken)
         {
-            private readonly IMapper _mapper;
-            private readonly IMediator _mediator;
-            private readonly IEndpointViewModel _viewModel;
+            var clone = (IEndpoint)Activator.CreateInstance(request.Endpoint.GetType());
 
-            public Handler(IMediator mediator, IMapper mapper, IEndpointViewModel viewModel)
-            {
-                _mapper = mapper;
-                _mediator = mediator;
-                _viewModel = viewModel;
-            }
+            _viewModel.Endpoint = _mapper.Map(request.Endpoint, clone);
 
-            protected override Task Handle(Request request, CancellationToken cancellationToken)
-            {
-                var clone = (IEndpoint)Activator.CreateInstance(request.Endpoint.GetType());
-
-                _viewModel.Endpoint = _mapper.Map(request.Endpoint, clone);
-
-                return _mediator.Send(Page.Show("Edit Endpoint", _viewModel));
-            }
+            return _mediator.Send(Page.Show("Edit Endpoint", _viewModel));
         }
     }
 }

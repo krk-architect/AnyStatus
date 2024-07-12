@@ -1,12 +1,11 @@
 ﻿using AnyStatus.API.Widgets;
 using AnyStatus.Plugins.Azure.API.Endpoints;
 
-namespace AnyStatus.Plugins.Azure.API
-{
-    internal interface IAzureDevOpsWidget : IRequireEndpoint<IAzureDevOpsEndpoint>
-    {
-        string Account { get; }
+namespace AnyStatus.Plugins.Azure.API;
 
-        string Project { get; }
-    }
+internal interface IAzureDevOpsWidget : IRequireEndpoint<IAzureDevOpsEndpoint>
+{
+    string Account { get; }
+
+    string Project { get; }
 }

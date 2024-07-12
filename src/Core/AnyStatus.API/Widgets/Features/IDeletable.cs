@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface IDeletable
-    {
-    }
-}
+﻿namespace AnyStatus.API.Widgets;
+
+public interface IDeletable { }

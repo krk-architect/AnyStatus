@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace AnyStatus.API.Widgets
+namespace AnyStatus.API.Widgets;
+
+public interface IPipeline
 {
-    public interface IPipeline
-    {
-        string Branch { get; set; }
+    string Branch { get; set; }
 
-        string BuildNumber { get; set; }
+    string BuildNumber { get; set; }
 
-        DateTime FinishTime { get; set; }
+    DateTime FinishTime { get; set; }
 
-        TimeSpan Duration { get; set; }
-    }
+    TimeSpan Duration { get; set; }
 }

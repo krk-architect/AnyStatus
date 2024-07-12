@@ -1,24 +1,25 @@
-﻿using AnyStatus.API.Attributes;
-using AnyStatus.API.Widgets;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using AnyStatus.API.Attributes;
+using AnyStatus.API.Widgets;
 
-namespace AnyStatus.Plugins.Docker.Images
+namespace AnyStatus.Plugins.Docker.Images;
+
+[Category("Docker")]
+[DisplayName("Docker Images")]
+[Description("View a list of docker containers")]
+[Redirect("AnyStatus.Plugins.Docker.Images.DockerImages")]
+public class DockerImagesWidget
+    : StatusWidget
+    , ICommonWidget
+    , IPollable
+    , IRequireEndpoint<DockerEndpoint>
+    , IInitializable
 {
-    [Category("Docker")]
-    [DisplayName("Docker Images")]
-    [Description("View a list of docker containers")]
-    [Redirect("AnyStatus.Plugins.Docker.Images.DockerImages")]
-    public class DockerImagesWidget : StatusWidget, ICommonWidget, IPollable, IRequireEndpoint<DockerEndpoint>, IInitializable
-    {
-        public DockerImagesWidget()
-        {
-            IsAggregate = true;
-        }
+    public DockerImagesWidget() { IsAggregate = true; }
 
-        [Required]
-        [EndpointSource]
-        [DisplayName("Endpoint")]
-        public string EndpointId { get; set; }
-    }
+    [Required]
+    [EndpointSource]
+    [DisplayName("Endpoint")]
+    public string EndpointId { get; set; }
 }

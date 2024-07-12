@@ -1,8 +1,7 @@
-﻿namespace AnyStatus.Plugins.GitHub.API.Models
+﻿namespace AnyStatus.Plugins.GitHub.API.Models;
+
+public class GitHubPagesBuildStatus
 {
-    public class GitHubPagesBuildStatus
-    {
-        public string Status { get; set; }
-        public string HtmlUrl { get; set; }
-    }
+    public string Status  { get; set; }
+    public string HtmlUrl { get; set; }
 }

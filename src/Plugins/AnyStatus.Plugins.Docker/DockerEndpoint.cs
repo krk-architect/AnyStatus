@@ -1,15 +1,14 @@
-﻿using AnyStatus.API.Endpoints;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using AnyStatus.API.Endpoints;
 
-namespace AnyStatus.Plugins.Docker
+namespace AnyStatus.Plugins.Docker;
+
+[DisplayName("Docker")]
+public class DockerEndpoint : Endpoint
 {
-    [DisplayName("Docker")]
-    public class DockerEndpoint : Endpoint
+    public DockerEndpoint()
     {
-        public DockerEndpoint()
-        {
-            Name = "Docker Desktop";
-            Address = "npipe://./pipe/docker_engine";
-        }
+        Name    = "Docker Desktop";
+        Address = "npipe://./pipe/docker_engine";
     }
 }

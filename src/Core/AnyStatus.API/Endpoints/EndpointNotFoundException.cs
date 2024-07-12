@@ -1,15 +1,10 @@
 ﻿using System;
 
-namespace AnyStatus.API.Endpoints
-{
-    public class EndpointNotFoundException : Exception
-    {
-        public EndpointNotFoundException()
-        {
-        }
+namespace AnyStatus.API.Endpoints;
 
-        public EndpointNotFoundException(string message) : base(message)
-        {
-        }
-    }
+public class EndpointNotFoundException : Exception
+{
+    public EndpointNotFoundException() { }
+
+    public EndpointNotFoundException(string message) : base(message) { }
 }

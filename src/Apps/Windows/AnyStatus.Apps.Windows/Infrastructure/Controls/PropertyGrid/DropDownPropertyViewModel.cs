@@ -1,72 +1,87 @@
-﻿using AnyStatus.API.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
+using AnyStatus.API.Attributes;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid
+namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid;
+
+public class DropDownPropertyViewModel : PropertyViewModelBase
 {
-    public class DropDownPropertyViewModel : PropertyViewModelBase
+    private IEnumerable<NameValueItem> _items;
+
+    public DropDownPropertyViewModel(PropertyInfo propertyInfo, object source) : base(propertyInfo, source)
     {
-        private IEnumerable<NameValueItem> _items;
+        Name = propertyInfo.Name;
+    }
 
-        public DropDownPropertyViewModel(PropertyInfo propertyInfo, object source) : base(propertyInfo, source) => Name = propertyInfo.Name;
+    public DropDownPropertyViewModel(PropertyInfo               propertyInfo
+                                   , object                     source
+                                   , IEnumerable<NameValueItem> items) : this(propertyInfo, source)
+    {
+        Items = items;
+    }
 
-        public DropDownPropertyViewModel(PropertyInfo propertyInfo, object source, IEnumerable<NameValueItem> items) : this(propertyInfo, source) => Items = items;
+    public DropDownPropertyViewModel(PropertyInfo                    propertyInfo
+                                   , object                          source
+                                   , IItemsSource                    itemsSource
+                                   , IEnumerable<IPropertyViewModel> properties
+                                   , bool                            autoload) : this(propertyInfo, source)
+    {
+        Load = () => Items = itemsSource.GetItems(source)?.OrderBy(e => e.Name); //todo: handle errors
 
-        public DropDownPropertyViewModel(PropertyInfo propertyInfo, object source, IItemsSource itemsSource, IEnumerable<IPropertyViewModel> properties, bool autoload) : this(propertyInfo, source)
+        Cascade(propertyInfo, properties);
+
+        if (autoload)
         {
-            Load = () => Items = itemsSource.GetItems(source)?.OrderBy(e => e.Name); //todo: handle errors
-
-            Cascade(propertyInfo, properties);
-
-            if (autoload)
-            {
-                Load();
-            }
+            Load();
         }
+    }
 
-        public DropDownPropertyViewModel(PropertyInfo propertyInfo, object source, IAsyncItemsSource asyncItemsSource, IEnumerable<IPropertyViewModel> properties, bool autoload) : this(propertyInfo, source)
+    public DropDownPropertyViewModel(PropertyInfo                    propertyInfo
+                                   , object                          source
+                                   , IAsyncItemsSource               asyncItemsSource
+                                   , IEnumerable<IPropertyViewModel> properties
+                                   , bool                            autoload) : this(propertyInfo, source)
+    {
+        Load = async () => Items = (await asyncItemsSource.GetItemsAsync(source))?.OrderBy(e => e.Name);
+
+        Cascade(propertyInfo, properties);
+
+        if (autoload)
         {
-            Load = async () => Items = (await asyncItemsSource.GetItemsAsync(source))?.OrderBy(e => e.Name);
-
-            Cascade(propertyInfo, properties);
-
-            if (autoload)
-            {
-                Load();
-            }
+            Load();
         }
+    }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public Action Load { get; set; }
+    public Action Load { get; set; }
 
-        public ICommand SelectionChanged { get; set; }
+    public ICommand SelectionChanged { get; set; }
 
-        public IEnumerable<NameValueItem> Items
+    public IEnumerable<NameValueItem> Items
+    {
+        get => _items;
+        set => Set(ref _items, value);
+    }
+
+    protected void Cascade(PropertyInfo propertyInfo, IEnumerable<IPropertyViewModel> properties)
+    {
+        if (propertyInfo.GetCustomAttribute<RefreshAttribute>() is RefreshAttribute refreshAttribute)
         {
-            get => _items;
-            set => Set(ref _items, value);
-        }
+            SelectionChanged = new Command(_ =>
+                                           {
+                                               foreach (var property in properties.OfType<DropDownPropertyViewModel>().Where(p => p.Name.Equals(refreshAttribute.Name)))
+                                               {
+                                                   var tmp = property.Value;
 
-        protected void Cascade(PropertyInfo propertyInfo, IEnumerable<IPropertyViewModel> properties)
-        {
-            if (propertyInfo.GetCustomAttribute<RefreshAttribute>() is RefreshAttribute refreshAttribute)
-            {
-                SelectionChanged = new Command(_ =>
-                {
-                    foreach (var property in properties.OfType<DropDownPropertyViewModel>().Where(p => p.Name.Equals(refreshAttribute.Name)))
-                    {
-                        var tmp = property.Value;
+                                                   property.Load();
 
-                        property.Load();
-
-                        property.Value = tmp;
-                    }
-                });
-            }
+                                                   property.Value = tmp;
+                                               }
+                                           });
         }
     }
 }

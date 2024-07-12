@@ -11,7 +11,7 @@
 		<RepositoryUrl>https://github.com/AnyStatus/AnyStatus</RepositoryUrl>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://www.anystat.us</PackageProjectUrl>
-		<PackageIconUrl>http://www.anystat.us/assets/images/logo_128px.png</PackageIconUrl>
+		<PackageIconUrl>AnyStatus.png</PackageIconUrl>
 		<Copyright>Copyright © Alon Amsalem</Copyright>
 		<TargetFramework>net8.0</TargetFramework>
 		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
@@ -24,6 +24,10 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Images\AnyStatus.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 </Project>

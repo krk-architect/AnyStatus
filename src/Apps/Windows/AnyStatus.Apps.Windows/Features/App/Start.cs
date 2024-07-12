@@ -1,4 +1,13 @@
-﻿using AnyStatus.API.Endpoints;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
+using AnyStatus.API.Endpoints;
 using AnyStatus.API.Events;
 using AnyStatus.Apps.Windows.Features.NamedPipe;
 using AnyStatus.Apps.Windows.Features.Themes;
@@ -15,190 +24,183 @@ using AnyStatus.Core.Widgets;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
 
-namespace AnyStatus.Apps.Windows.Features.App
+namespace AnyStatus.Apps.Windows.Features.App;
+
+public sealed class Start
 {
-    public sealed class Start
+    internal class Request : IRequest { }
+
+    internal class Handler : AsyncRequestHandler<Request>
     {
-        internal class Request : IRequest { }
+        private readonly IAppContext      _appContext;
+        private readonly IAppSettings     _appSettings;
+        private readonly ContractResolver _contractResolver;
+        private readonly IJobScheduler    _jobScheduler;
+        private readonly ILogger          _logger;
+        private readonly IMediator        _mediator;
+        private readonly INamedPipeServer _namedPipeServer;
+        private readonly ITelemetry       _telemetry;
 
-        internal class Handler : AsyncRequestHandler<Request>
+        public Handler(
+            ContractResolver contractResolver
+          , IMediator        mediator
+          , IAppSettings     appSettings
+          , IAppContext      appContext
+          , ILogger          logger
+          , ITelemetry       telemetry
+          , IJobScheduler    jobScheduler
+          , INamedPipeServer namedPipeServer)
         {
-            private readonly ILogger _logger;
-            private readonly IMediator _mediator;
-            private readonly ITelemetry _telemetry;
-            private readonly IAppContext _appContext;
-            private readonly IAppSettings _appSettings;
-            private readonly IJobScheduler _jobScheduler;
-            private readonly INamedPipeServer _namedPipeServer;
-            private readonly ContractResolver _contractResolver;
+            _logger           = logger;
+            _mediator         = mediator;
+            _telemetry        = telemetry;
+            _appContext       = appContext;
+            _appSettings      = appSettings;
+            _jobScheduler     = jobScheduler;
+            _namedPipeServer  = namedPipeServer;
+            _contractResolver = contractResolver;
+        }
 
-            public Handler(
-                ContractResolver contractResolver,
-                IMediator mediator,
-                IAppSettings appSettings,
-                IAppContext appContext,
-                ILogger logger,
-                ITelemetry telemetry,
-                IJobScheduler jobScheduler,
-                INamedPipeServer namedPipeServer)
+        protected override async Task Handle(Request request, CancellationToken cancellationToken)
+        {
+            WidgetNotifications.Mediator = _mediator;
+
+            CatchUnhandledExceptions();
+
+            await InitUserSettingsAsync();
+
+            await ChangeTheme();
+
+            if (!StartupActivation() || _appContext.UserSettings.StartMinimized is false)
             {
-                _logger = logger;
-                _mediator = mediator;
-                _telemetry = telemetry;
-                _appContext = appContext;
-                _appSettings = appSettings;
-                _jobScheduler = jobScheduler;
-                _namedPipeServer = namedPipeServer;
-                _contractResolver = contractResolver;
+                await _mediator.Send(MaterialWindow.Show<AppViewModel>(width: 398, minWidth: 398, height: 418, minHeight: 418));
             }
 
-            protected override async Task Handle(Request request, CancellationToken cancellationToken)
+            await InitSession();
+
+            await InitEndpointsAsync();
+
+            await _jobScheduler.StartAsync(cancellationToken);
+
+            _ = Task.Run(() => _namedPipeServer.StartAsync());
+
+            _telemetry.TrackEvent("Startup");
+        }
+
+        private Task ChangeTheme() => _mediator.Send(new ChangeTheme.Request(_appContext.UserSettings.Theme));
+
+        private async Task InitSession()
+        {
+            _logger.LogDebug("Session file: {path}", _appSettings.SessionFilePath);
+
+            if (File.Exists(_appSettings.SessionFilePath))
             {
-                WidgetNotifications.Mediator = _mediator;
+                var json = File.ReadAllText(_appSettings.SessionFilePath);
 
-                CatchUnhandledExceptions();
+                _appContext.Session = JsonConvert.DeserializeObject<Session>(json);
+            }
+            else
+            {
+                _logger.LogInformation("Initializing session...");
 
-                await InitUserSettingsAsync();
+                _appContext.Session = new()
+                                      {
+                                          Widget = new Root()
+                                      };
 
-                await ChangeTheme();
-
-                if (!StartupActivation() || _appContext.UserSettings.StartMinimized is false)
-                {
-                    await _mediator.Send(MaterialWindow.Show<AppViewModel>(width: 398, minWidth: 398, height: 418, minHeight: 418));
-                }
-
-                await InitSession();
-
-                await InitEndpointsAsync();
-
-                await _jobScheduler.StartAsync(cancellationToken);
-
-                _ = Task.Run(() => _namedPipeServer.StartAsync());
-
-                _telemetry.TrackEvent("Startup");
+                await _mediator.Send(new SaveSession.Request());
             }
 
-            private Task ChangeTheme() => _mediator.Send(new ChangeTheme.Request(_appContext.UserSettings.Theme));
-
-            private async Task InitSession()
+            if (!string.IsNullOrEmpty(_appContext.Session.FileName) && File.Exists(_appContext.Session.FileName))
             {
-                _logger.LogDebug("Session file: {path}", _appSettings.SessionFilePath);
+                await _mediator.Send(new OpenSession.Request
+                                     {
+                                         FileName = _appContext.Session.FileName
+                                     });
+            }
+            else
+            {
+                _appContext.Session.FileName = null;
+                _appContext.Session.Widget   = new Root();
+            }
+        }
 
-                if (File.Exists(_appSettings.SessionFilePath))
-                {
-                    var json = File.ReadAllText(_appSettings.SessionFilePath);
-
-                    _appContext.Session = JsonConvert.DeserializeObject<Session>(json);
-                }
-                else
-                {
-                    _logger.LogInformation("Initializing session...");
-
-                    _appContext.Session = new Session
-                    {
-                        Widget = new Root()
-                    };
-
-                    await _mediator.Send(new SaveSession.Request());
-                }
-
-                if (!string.IsNullOrEmpty(_appContext.Session.FileName) && File.Exists(_appContext.Session.FileName))
-                {
-                    await _mediator.Send(new OpenSession.Request { FileName = _appContext.Session.FileName });
-                }
-                else
-                {
-                    _appContext.Session.FileName = null;
-                    _appContext.Session.Widget = new Root();
-                }
+        private static bool StartupActivation()
+        {
+            if (Debugger.IsAttached)
+            {
+                return false;
             }
 
-            private static bool StartupActivation()
+            try
             {
-                if (Debugger.IsAttached)
-                {
-                    return false;
-                }
-
-                try
-                {
-                    return AppInstance.GetActivatedEventArgs()?.Kind == ActivationKind.StartupTask;
-                }
-                catch
-                {
-                    return false;
-                }
+                return AppInstance.GetActivatedEventArgs()?.Kind == ActivationKind.StartupTask;
             }
-
-            private void CatchUnhandledExceptions()
+            catch
             {
-                const string message = "An unexpected error occurred";
-
-                AppDomain.CurrentDomain.UnhandledException += (s, e) => _logger.LogError(e.ExceptionObject as Exception, message);
-
-                Dispatcher.CurrentDispatcher.UnhandledException += (s, e) =>
-                {
-                    e.Handled = true;
-                    _logger.LogError(e.Exception, message);
-                };
+                return false;
             }
+        }
 
-            private async Task InitUserSettingsAsync()
+        private void CatchUnhandledExceptions()
+        {
+            const string message = "An unexpected error occurred";
+
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => _logger.LogError(e.ExceptionObject as Exception, message);
+
+            Dispatcher.CurrentDispatcher.UnhandledException += (s, e) =>
+                                                               {
+                                                                   e.Handled = true;
+                                                                   _logger.LogError(e.Exception, message);
+                                                               };
+        }
+
+        private async Task InitUserSettingsAsync()
+        {
+            _logger.LogDebug("User setting file: {path}", _appSettings.UserSettingsFilePath);
+
+            if (File.Exists(_appSettings.UserSettingsFilePath))
             {
-                _logger.LogDebug("User setting file: {path}", _appSettings.UserSettingsFilePath);
+                var json = File.ReadAllText(_appSettings.UserSettingsFilePath);
 
-                if (File.Exists(_appSettings.UserSettingsFilePath))
-                {
-                    var json = File.ReadAllText(_appSettings.UserSettingsFilePath);
-
-                    _appContext.UserSettings = JsonConvert.DeserializeObject<UserSettings>(json);
-                }
-                else
-                {
-                    _logger.LogInformation("Initializing user settings...");
-
-                    _appContext.UserSettings = new UserSettings();
-
-                    _ = await _mediator.Send(new SaveUserSettings.Request());
-                }
+                _appContext.UserSettings = JsonConvert.DeserializeObject<UserSettings>(json);
             }
-
-            private async Task InitEndpointsAsync()
+            else
             {
-                _logger.LogDebug($"Session file: {_appSettings.EndpointsFilePath}");
+                _logger.LogInformation("Initializing user settings...");
 
-                if (File.Exists(_appSettings.EndpointsFilePath))
-                {
-                    var json = File.ReadAllText(_appSettings.EndpointsFilePath);
+                _appContext.UserSettings = new ();
 
-                    var endpoints = JsonConvert.DeserializeObject<IEnumerable<IEndpoint>>(json, new JsonSerializerSettings
-                    {
-                        ContractResolver = _contractResolver,
-                        TypeNameHandling = TypeNameHandling.All,
-                        Converters = new[] { new EndpointConverter() }
-                    });
+                _ = await _mediator.Send(new SaveUserSettings.Request());
+            }
+        }
 
-                    _appContext.Endpoints = new ObservableCollection<IEndpoint>(endpoints);
-                }
-                else
-                {
-                    _logger.LogInformation("Initializing endpoints...");
+        private async Task InitEndpointsAsync()
+        {
+            _logger.LogDebug($"Session file: {_appSettings.EndpointsFilePath}");
 
-                    _appContext.Endpoints = new ObservableCollection<IEndpoint>();
+            if (File.Exists(_appSettings.EndpointsFilePath))
+            {
+                var json = File.ReadAllText(_appSettings.EndpointsFilePath);
 
-                    _ = await _mediator.Send(new SaveEndpoints.Request());
-                }
+                var endpoints = JsonConvert.DeserializeObject<IEnumerable<IEndpoint>>(json
+                                                                                    , new JsonSerializerSettings
+                                                                                      {
+                                                                                          ContractResolver = _contractResolver
+                                                                                        , TypeNameHandling = TypeNameHandling.All
+                                                                                        , Converters       = new[] { new EndpointConverter() }
+                                                                                      });
+
+                _appContext.Endpoints = new (endpoints);
+            }
+            else
+            {
+                _logger.LogInformation("Initializing endpoints...");
+
+                _appContext.Endpoints = new ();
+
+                _ = await _mediator.Send(new SaveEndpoints.Request());
             }
         }
     }

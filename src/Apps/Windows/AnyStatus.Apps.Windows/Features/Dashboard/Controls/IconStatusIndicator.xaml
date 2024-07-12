@@ -7,7 +7,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:StatusIconConverter x:Key="StatusIconConverter"/>
+        <converters:StatusIconConverter x:Key="StatusIconConverter" />
     </UserControl.Resources>
     <Grid>
         <Rectangle Opacity="0.05" Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
@@ -17,6 +17,6 @@
             Height="16"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
-            Kind="{Binding Status, Converter={StaticResource StatusIconConverter}}"/>
+            Kind="{Binding Status, Converter={StaticResource StatusIconConverter}}" />
     </Grid>
 </UserControl>

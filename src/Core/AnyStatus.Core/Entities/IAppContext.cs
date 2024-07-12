@@ -1,16 +1,15 @@
-﻿using AnyStatus.API.Endpoints;
+﻿using System.Collections.ObjectModel;
+using AnyStatus.API.Endpoints;
 using AnyStatus.Core.Sessions;
 using AnyStatus.Core.Settings;
-using System.Collections.ObjectModel;
 
-namespace AnyStatus.Core.App
+namespace AnyStatus.Core.App;
+
+public interface IAppContext
 {
-    public interface IAppContext
-    {
-        Session Session { get; set; }
+    Session Session { get; set; }
 
-        UserSettings UserSettings { get; set; }
+    UserSettings UserSettings { get; set; }
 
-        ObservableCollection<IEndpoint> Endpoints { get; set; }
-    }
+    ObservableCollection<IEndpoint> Endpoints { get; set; }
 }

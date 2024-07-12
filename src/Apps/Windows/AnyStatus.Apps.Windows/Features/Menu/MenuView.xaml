@@ -1,9 +1,9 @@
 ﻿<UserControl x:Class="AnyStatus.Apps.Windows.Features.Dashboard.MenuView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:menu="clr-namespace:AnyStatus.Apps.Windows.Features.Menu" 
+             xmlns:menu="clr-namespace:AnyStatus.Apps.Windows.Features.Menu"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance Type=menu:MenuViewModel, IsDesignTimeCreatable=False}"
@@ -31,16 +31,16 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <ListBox Style="{StaticResource SlideAnimation}" 
-             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" 
+    <ListBox Style="{StaticResource SlideAnimation}"
+             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
              BorderThickness="0">
         <ListBox.RenderTransform>
-            <TranslateTransform X="{StaticResource SlideOffSet}"/>
+            <TranslateTransform X="{StaticResource SlideOffSet}" />
         </ListBox.RenderTransform>
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="NewSessionButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[New]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[New]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             New
@@ -48,7 +48,7 @@
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="OpenSessionButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[Open]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[Open]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             Open
@@ -56,7 +56,7 @@
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="SaveSessionButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[Save]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[Save]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             Save
@@ -64,7 +64,7 @@
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="SaveSessionAsButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[SaveAs]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[SaveAs]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             Save As
@@ -72,7 +72,7 @@
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="EndpointsButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[Endpoints]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[Endpoints]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             Endpoints
@@ -80,7 +80,7 @@
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="SettingsButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[Settings]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[Settings]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             Settings
@@ -88,7 +88,7 @@
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="HelpButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[Help]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[Help]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             Help
@@ -96,7 +96,7 @@
         <ListBoxItem Focusable="False" AutomationProperties.AutomationId="ExitButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding Commands[Exit]}"/>
+                    <i:InvokeCommandAction Command="{Binding Commands[Exit]}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             Exit

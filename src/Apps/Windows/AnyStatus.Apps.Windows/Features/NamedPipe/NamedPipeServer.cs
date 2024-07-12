@@ -1,40 +1,39 @@
-﻿using AnyStatus.API.Services;
+﻿using System.IO;
+using System.IO.Pipes;
+using System.Threading.Tasks;
+using AnyStatus.API.Services;
 using AnyStatus.Apps.Windows.Features.App;
 using AnyStatus.Apps.Windows.Infrastructure.Mvvm.Windows;
 using MediatR;
-using System.IO;
-using System.IO.Pipes;
-using System.Threading.Tasks;
 
-namespace AnyStatus.Apps.Windows.Features.NamedPipe
+namespace AnyStatus.Apps.Windows.Features.NamedPipe;
+
+internal class NamedPipeServer : INamedPipeServer
 {
-    internal class NamedPipeServer : INamedPipeServer
+    private const    string      PipeName = "{89790288-AE14-4BE1-A2D2-501EBC3F9C9E}";
+    private readonly IDispatcher _dispatcher;
+
+    private readonly IMediator _mediator;
+
+    public NamedPipeServer(IMediator mediator, IDispatcher dispatcher)
     {
-        private const string PipeName = "{89790288-AE14-4BE1-A2D2-501EBC3F9C9E}";
+        _mediator   = mediator;
+        _dispatcher = dispatcher;
+    }
 
-        private readonly IMediator _mediator;
-        private readonly IDispatcher _dispatcher;
-
-        public NamedPipeServer(IMediator mediator, IDispatcher dispatcher)
+    public async Task StartAsync()
+    {
+        while (true)
         {
-            _mediator = mediator;
-            _dispatcher = dispatcher;
-        }
+            using var server = new NamedPipeServerStream(PipeName);
 
-        public async Task StartAsync()
-        {
-            while (true)
+            await server.WaitForConnectionAsync();
+
+            using var reader = new StreamReader(server);
+
+            if (await reader.ReadLineAsync() == "activate")
             {
-                using var server = new NamedPipeServerStream(PipeName);
-
-                await server.WaitForConnectionAsync();
-
-                using var reader = new StreamReader(server);
-
-                if (await reader.ReadLineAsync() == "activate")
-                {
-                    _dispatcher.Invoke(() => _mediator.Send(MaterialWindow.Show<AppViewModel>()));
-                }
+                _dispatcher.Invoke(() => _mediator.Send(MaterialWindow.Show<AppViewModel>()));
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages.PageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:pages="clr-namespace:AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages"
              d:DataContext="{d:DesignInstance Type=pages:PageViewModel, IsDesignTimeCreatable=False}"
@@ -11,7 +11,7 @@
             <Style TargetType="DockPanel">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Content}" Value="{x:Null}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Setter Property="Visibility" Value="Collapsed" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -19,11 +19,11 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Button Command="{Binding Commands[Close]}" Style="{StaticResource FlatButtonStyle}" WindowChrome.IsHitTestVisibleInChrome="True" AutomationProperties.AutomationId="BackButton">
                 <Button.Content>
-                    <ContentControl Height="24" Width="24" Content="{Binding Source={StaticResource BackIcon}}"/>
+                    <ContentControl Height="24" Width="24" Content="{Binding Source={StaticResource BackIcon}}" />
                 </Button.Content>
             </Button>
-            <TextBlock VerticalAlignment="Center" Text="{Binding Title}" Margin="5,0,0,0"/>
+            <TextBlock VerticalAlignment="Center" Text="{Binding Title}" Margin="5,0,0,0" />
         </StackPanel>
-        <ContentControl Content="{Binding Content}"/>
+        <ContentControl Content="{Binding Content}" />
     </DockPanel>
 </UserControl>

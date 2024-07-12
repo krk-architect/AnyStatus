@@ -1,51 +1,51 @@
 ﻿using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using AnyStatus.API.Widgets;
 using AnyStatus.Core.Jobs;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace AnyStatus.Core.Features
+namespace AnyStatus.Core.Features;
+
+public class Refresh
 {
-    public class Refresh
+    [DebuggerDisplay("{Widget}")]
+    public class Request : IRequest
     {
-        [DebuggerDisplay("{Widget}")]
-        public class Request : IRequest
-        {
-            public Request(IWidget widget) => Widget = widget;
+        public Request(IWidget widget) { Widget = widget; }
 
-            public IWidget Widget { get; }
+        public IWidget Widget { get; }
+    }
+
+    public class Handler : AsyncRequestHandler<Request>
+    {
+        private readonly IJobScheduler _jobScheduler;
+        private readonly ILogger       _logger;
+
+        public Handler(ILogger logger, IJobScheduler jobScheduler)
+        {
+            _logger       = logger;
+            _jobScheduler = jobScheduler;
         }
 
-        public class Handler : AsyncRequestHandler<Request>
-        {
-            private readonly ILogger _logger;
-            private readonly IJobScheduler _jobScheduler;
+        protected override Task Handle(Request request, CancellationToken cancellationToken)
+            => TriggerJob(request.Widget, cancellationToken);
 
-            public Handler(ILogger logger, IJobScheduler jobScheduler)
+        private async Task TriggerJob(IWidget widget, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Refreshing '{widget}'...", widget.Name);
+
+            if (widget.IsEnabled && widget is IPollable)
             {
-                _logger = logger;
-                _jobScheduler = jobScheduler;
+                await _jobScheduler.TriggerJobAsync(widget.Id, cancellationToken);
             }
 
-            protected override Task Handle(Request request, CancellationToken cancellationToken) => TriggerJob(request.Widget, cancellationToken);
-
-            private async Task TriggerJob(IWidget widget, CancellationToken cancellationToken)
+            if (widget.HasChildren)
             {
-                _logger.LogInformation("Refreshing '{widget}'...", widget.Name);
-
-                if (widget.IsEnabled && widget is IPollable)
+                foreach (var child in widget)
                 {
-                    await _jobScheduler.TriggerJobAsync(widget.Id, cancellationToken);
-                }
-
-                if (widget.HasChildren)
-                {
-                    foreach (var child in widget)
-                    {
-                        await TriggerJob(child, cancellationToken);
-                    }
+                    await TriggerJob(child, cancellationToken);
                 }
             }
         }

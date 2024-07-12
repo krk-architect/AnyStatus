@@ -1,26 +1,22 @@
-﻿using AnyStatus.API.Widgets;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
 
 //https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthreport?view=dotnet-plat-ext-3.1
 
-namespace AnyStatus.Plugins.HealthChecks
-{
-    [Browsable(false)]
-    [Category("Network")]
-    [DisplayName("ASP.NET Core Health")]
-    [Description("View the health status of ASP.NET Core instance")]
-    public class AspNetCoreHealthCheckWidget : StatusWidget, IPollable, IOpenInApp, ICommonWidget
-    {
-        public string URL { get; }
-    }
+namespace AnyStatus.Plugins.HealthChecks;
 
-    public class AspNetCoreHealthCheck : AsyncStatusCheck<AspNetCoreHealthCheckWidget>
-    {
-        protected override Task Handle(StatusRequest<AspNetCoreHealthCheckWidget> request, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-    }
+[Browsable(false)]
+[Category("Network")]
+[DisplayName("ASP.NET Core Health")]
+[Description("View the health status of ASP.NET Core instance")]
+public class AspNetCoreHealthCheckWidget : StatusWidget, IPollable, IOpenInApp, ICommonWidget
+{
+    public string URL { get; }
+}
+
+public class AspNetCoreHealthCheck : AsyncStatusCheck<AspNetCoreHealthCheckWidget>
+{
+    protected override Task Handle(StatusRequest<AspNetCoreHealthCheckWidget> request, CancellationToken cancellationToken) => Task.CompletedTask;
 }

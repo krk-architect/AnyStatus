@@ -1,9 +1,8 @@
-﻿namespace AnyStatus.Plugins.Azure.API.Contracts
+﻿namespace AnyStatus.Plugins.Azure.API.Contracts;
+
+internal class GitRepository
 {
-    internal class GitRepository
-    {
-        public string Id { get; set; }
-        
-        public string Name { get; set; }
-    }
+    public string Id { get; set; }
+
+    public string Name { get; set; }
 }

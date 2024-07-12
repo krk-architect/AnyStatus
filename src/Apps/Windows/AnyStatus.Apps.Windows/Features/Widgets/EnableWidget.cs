@@ -1,58 +1,54 @@
-﻿using AnyStatus.API.Widgets;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
 using AnyStatus.Core.Features;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace AnyStatus.Apps.Windows.Features.Widgets
+namespace AnyStatus.Apps.Windows.Features.Widgets;
+
+public class EnableWidget
 {
-    public class EnableWidget
+    public class Request : IRequest
     {
-        public class Request : IRequest
-        {
-            public Request(IWidget widget) => Widget = widget;
+        public Request(IWidget widget) { Widget = widget; }
 
-            public IWidget Widget { get; }
+        public IWidget Widget { get; }
+    }
+
+    public class Handler : AsyncRequestHandler<Request>
+    {
+        private readonly IMediator _mediator;
+
+        public Handler(IMediator mediator) { _mediator = mediator; }
+
+        protected override async Task Handle(Request request, CancellationToken cancellationToken)
+        {
+            Enable(request.Widget);
+
+            EnableParents(request.Widget);
+
+            await _mediator.Send(new Refresh.Request(request.Widget));
         }
 
-        public class Handler : AsyncRequestHandler<Request>
+        private static void EnableParents(IWidget widget)
         {
-            private readonly IMediator _mediator;
-
-            public Handler(IMediator mediator)
+            if (widget.Parent is null)
             {
-                _mediator = mediator;
+                return;
             }
 
-            protected override async Task Handle(Request request, CancellationToken cancellationToken)
+            widget.Parent.IsEnabled = true;
+
+            EnableParents(widget.Parent);
+        }
+
+        private static void Enable(IWidget widget)
+        {
+            widget.IsEnabled = true;
+
+            foreach (var child in widget)
             {
-                Enable(request.Widget);
-
-                EnableParents(request.Widget);
-
-                await _mediator.Send(new Refresh.Request(request.Widget));
-            }
-
-            private static void EnableParents(IWidget widget)
-            {
-                if (widget.Parent is null)
-                {
-                    return;
-                }
-
-                widget.Parent.IsEnabled = true;
-
-                EnableParents(widget.Parent);
-            }
-
-            private static void Enable(IWidget widget)
-            {
-                widget.IsEnabled = true;
-
-                foreach (var child in widget)
-                {
-                    Enable(child);
-                }
+                Enable(child);
             }
         }
     }

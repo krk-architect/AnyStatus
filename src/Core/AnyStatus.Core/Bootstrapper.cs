@@ -2,30 +2,29 @@
 using AnyStatus.Core.Services;
 using SimpleInjector;
 
-namespace AnyStatus.Core
+namespace AnyStatus.Core;
+
+public static class Bootstrapper
 {
-    public static class Bootstrapper
+    public static IApp Bootstrap()
     {
-        public static IApp Bootstrap()
-        {
-            var container = CreateContainer();
+        var container = CreateContainer();
 
-            return container.GetInstance<IApp>();
-        }
+        return container.GetInstance<IApp>();
+    }
 
-        private static Container CreateContainer()
-        {
-            var container = new Container();
+    private static Container CreateContainer()
+    {
+        var container = new Container();
 
-            container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
+        container.Options.DefaultScopedLifestyle = ScopedLifestyle.Flowing;
 
-            container.RegisterPackages(Scanner.GetAssemblies());
+        container.RegisterPackages(Scanner.GetAssemblies());
 
-            container.Options.ResolveUnregisteredConcreteTypes = true;
+        container.Options.ResolveUnregisteredConcreteTypes = true;
 
-            container.Verify();
+        container.Verify();
 
-            return container;
-        }
+        return container;
     }
 }

@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Settings
+namespace AnyStatus.Apps.Windows.Features.Settings;
+
+public partial class SettingsView : UserControl
 {
-    public partial class SettingsView : UserControl
-    {
-        public SettingsView()
-        {
-            InitializeComponent();
-        }
-    }
+    public SettingsView() { InitializeComponent(); }
 }

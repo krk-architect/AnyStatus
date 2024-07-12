@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid
+namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid;
+
+public class NumericPropertyViewModel : PropertyViewModelBase
 {
-    public class NumericPropertyViewModel : PropertyViewModelBase
-    {
-        public NumericPropertyViewModel(PropertyInfo propertyInfo, object source) : base(propertyInfo, source) { }
-    }
+    public NumericPropertyViewModel(PropertyInfo propertyInfo, object source) : base(propertyInfo, source) { }
 }

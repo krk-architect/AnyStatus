@@ -14,9 +14,9 @@
              mc:Ignorable="d">
     <UserControl.Resources>
 
-        <converters:PackIconConverter x:Key="PackIconConverter"/>
+        <converters:PackIconConverter x:Key="PackIconConverter" />
 
-        <dataTemplates:WidgetTemplateSelector x:Key="WidgetTemplateSelector"/>
+        <dataTemplates:WidgetTemplateSelector x:Key="WidgetTemplateSelector" />
 
         <Style x:Key="TreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
             <Style.Resources>
@@ -24,10 +24,10 @@
                     <Setter Property="Grid.ColumnSpan" Value="2" />
                 </Style>
             </Style.Resources>
-            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0,4,0,0" />
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="Background" Value="{DynamicResource WidgetBackground}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="{DynamicResource WidgetBackground}" />
             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
         </Style>
 
@@ -39,42 +39,42 @@
                                   DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
-	        <dataTemplates:WidgetView/>
+            <dataTemplates:WidgetView />
         </HierarchicalDataTemplate>
 
         <HierarchicalDataTemplate x:Key="FolderTemplate"
                                   DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
-            <dataTemplates:FolderView/>
+            <dataTemplates:FolderView />
         </HierarchicalDataTemplate>
 
         <HierarchicalDataTemplate x:Key="MetricTemplate"
                                   DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
-            <dataTemplates:MetricView/>
+            <dataTemplates:MetricView />
         </HierarchicalDataTemplate>
 
         <HierarchicalDataTemplate x:Key="PipelineTemplate"
                                   DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
-            <dataTemplates:PipelineView/>
+            <dataTemplates:PipelineView />
         </HierarchicalDataTemplate>
 
         <HierarchicalDataTemplate x:Key="JenkinsJobTemplate"
                                   DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
-	        <dataTemplates:JenkinsJobView />
+            <dataTemplates:JenkinsJobView />
         </HierarchicalDataTemplate>
 
         <HierarchicalDataTemplate x:Key="LabelTemplate"
                                   DataType="widgets:Widget"
                                   ItemsSource="{Binding}"
                                   ItemContainerStyle="{StaticResource TreeViewItemStyle}">
-            <dataTemplates:LabelView/>
+            <dataTemplates:LabelView />
         </HierarchicalDataTemplate>
 
         <PopupAnimation x:Key="{x:Static SystemParameters.MenuPopupAnimationKey}">
@@ -89,20 +89,20 @@
             </ContextMenu.Resources>
             <ContextMenu.ItemContainerStyle>
                 <Style TargetType="{x:Type MenuItem}">
-                    <Setter Property="Margin" Value="0"/>
-                    <Setter Property="Padding" Value="15,7"/>
-                    <Setter Property="Header" Value="{Binding Name}"/>
-                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="Padding" Value="15,7" />
+                    <Setter Property="Header" Value="{Binding Name}" />
+                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
                     <!--<Setter Property="ItemsSource" Value="{Binding Item}"/>-->
-                    <Setter Property="Command" Value="{Binding Command}"/>
-                    <Setter Property="InputGestureText" Value="{Binding InputGestureText}"/>
-                    <Setter Property="Icon" Value="{Binding Icon, Converter={StaticResource PackIconConverter}}"/>
+                    <Setter Property="Command" Value="{Binding Command}" />
+                    <Setter Property="InputGestureText" Value="{Binding InputGestureText}" />
+                    <Setter Property="Icon" Value="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding}" Value="{x:Null}">
-                            <Setter Property="Template" Value="{StaticResource SeparatorTemplate}"/>
+                            <Setter Property="Template" Value="{StaticResource SeparatorTemplate}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsEnabled}" Value="False">
-                            <Setter Property="Opacity" Value="0.4"/>
+                            <Setter Property="Opacity" Value="0.4" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -110,11 +110,11 @@
         </ContextMenu>
 
         <Style x:Key="TextStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="Visibility" Value="Collapsed"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Opacity" Value="0.7"/>
+            <Setter Property="Opacity" Value="0.7" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Context.Session.Widget.Count}" Value="0">
                     <Setter Property="Visibility" Value="Visible" />
@@ -123,11 +123,11 @@
         </Style>
 
         <Style x:Key="LoadingTextStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="Visibility" Value="Collapsed"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Opacity" Value="0.7"/>
+            <Setter Property="Opacity" Value="0.7" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Context.Session}" Value="{x:Null}">
                     <Setter Property="Visibility" Value="Visible" />

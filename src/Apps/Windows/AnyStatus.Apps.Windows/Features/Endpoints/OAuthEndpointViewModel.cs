@@ -1,92 +1,94 @@
-﻿using AnyStatus.API.Endpoints;
+﻿using System;
+using System.Security;
+using System.Threading.Tasks;
+using System.Web;
+using AnyStatus.API.Endpoints;
 using AnyStatus.Apps.Windows.Infrastructure.Mvvm;
 using AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages;
 using MediatR;
 using Microsoft.Web.WebView2.Core;
-using System;
-using System.Security;
-using System.Threading.Tasks;
-using System.Web;
 
-namespace AnyStatus.Apps.Windows.Features.Endpoints
+namespace AnyStatus.Apps.Windows.Features.Endpoints;
+
+public class OAuthEndpointViewModel : BaseViewModel
 {
-    public class OAuthEndpointViewModel : BaseViewModel
+    private readonly IMediator _mediator;
+
+    public OAuthEndpointViewModel(IMediator mediator)
     {
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public OAuthEndpointViewModel(IMediator mediator) => _mediator = mediator;
+    public OAuthEndpoint Endpoint { get; set; }
 
-        public OAuthEndpoint Endpoint { get; set; }
-
-        public void HandleBrowserNavigation(object sender, EventArgs args)
+    public void HandleBrowserNavigation(object sender, EventArgs args)
+    {
+        if (string.IsNullOrEmpty(Endpoint?.CallbackURL))
         {
-            if (string.IsNullOrEmpty(Endpoint?.CallbackURL))
-            {
-                return;
-            }
-
-            if (args is CoreWebView2NavigationStartingEventArgs navigation && navigation.Uri.StartsWith(Endpoint.CallbackURL))
-            {
-                navigation.Cancel = true;
-
-                var code = ParseCallback(navigation.Uri);
-
-                IRequest<AccessTokenResponse> request = Endpoint.GrantType switch
-                {
-                    OAuthGrantTypes.AuthorizationCode => new GetOAuthAccessToken.Request(Endpoint, code),
-                    OAuthGrantTypes.JsonWebToken => new GetJwtAccessToken.Request(Endpoint, code),
-                    OAuthGrantTypes.None => throw new NotImplementedException(),
-                    _ => throw new NotSupportedException()
-                };
-
-                _mediator.Send(request).ContinueWith(task => Save(task.Result), TaskScheduler.FromCurrentSynchronizationContext());
-
-                _mediator.Send(Page.Close());
-            }
+            return;
         }
 
-        private string ParseCallback(string url)
+        if (args is CoreWebView2NavigationStartingEventArgs navigation && navigation.Uri.StartsWith(Endpoint.CallbackURL))
         {
-            var uri = new Uri(url);
+            navigation.Cancel = true;
 
-            var query = HttpUtility.ParseQueryString(uri.Query);
+            var code = ParseCallback(navigation.Uri);
 
-            var error = query.Get("error");
+            IRequest<AccessTokenResponse> request = Endpoint.GrantType switch
+                                                    {
+                                                        OAuthGrantTypes.AuthorizationCode => new GetOAuthAccessToken.Request(Endpoint, code)
+                                                      , OAuthGrantTypes.JsonWebToken      => new GetJwtAccessToken.Request(Endpoint, code)
+                                                      , OAuthGrantTypes.None              => throw new NotImplementedException()
+                                                      , _                                 => throw new NotSupportedException()
+                                                    };
 
-            if (error is not null)
-            {
-                throw new Exception("A remote error occurred while authorizing the token request: " + error);
-            }
+            _mediator.Send(request).ContinueWith(async task => Save(await task.ConfigureAwait(false)), TaskScheduler.FromCurrentSynchronizationContext());
 
-            var state = query.Get("state");
+            _mediator.Send(Page.Close());
+        }
+    }
 
-            if (state != Endpoint.Id)
-            {
-                throw new SecurityException("A security error occurred. The remote state and local state are different.");
-            }
+    private string ParseCallback(string url)
+    {
+        var uri = new Uri(url);
 
-            var code = query.Get("code");
+        var query = HttpUtility.ParseQueryString(uri.Query);
 
-            if (string.IsNullOrEmpty(code))
-            {
-                throw new Exception("Authentication code is null or empty.");
-            }
+        var error = query.Get("error");
 
-            return code;
+        if (error is not null)
+        {
+            throw new ("A remote error occurred while authorizing the token request: " + error);
         }
 
-        private void Save(AccessTokenResponse atr)
+        var state = query.Get("state");
+
+        if (state != Endpoint.Id)
         {
-            if (atr is null)
-            {
-                return;
-            }
-
-            Endpoint.AccessToken = atr.AccessToken;
-            
-            Endpoint.RefreshToken = atr.RefreshToken;
-
-            _mediator.Send(new SaveEndpoint.Request(Endpoint));
+            throw new SecurityException("A security error occurred. The remote state and local state are different.");
         }
+
+        var code = query.Get("code");
+
+        if (string.IsNullOrEmpty(code))
+        {
+            throw new ("Authentication code is null or empty.");
+        }
+
+        return code;
+    }
+
+    private void Save(AccessTokenResponse atr)
+    {
+        if (atr is null)
+        {
+            return;
+        }
+
+        Endpoint.AccessToken = atr.AccessToken;
+
+        Endpoint.RefreshToken = atr.RefreshToken;
+
+        _mediator.Send(new SaveEndpoint.Request(Endpoint));
     }
 }

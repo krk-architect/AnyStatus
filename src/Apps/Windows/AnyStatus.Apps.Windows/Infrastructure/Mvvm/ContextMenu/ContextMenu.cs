@@ -1,18 +1,17 @@
 ﻿using System.Windows.Input;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu
+namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu;
+
+public abstract class ContextMenu<TContext> : IContextMenu
 {
-    public abstract class ContextMenu<TContext> : IContextMenu
-    {
-        public virtual bool IsVisible => true;
-        public virtual bool IsEnabled => true;
-        public int Order { get; protected set; }
-        public string Icon { get; protected set; }
-        public string Name { get; protected set; }
-        public virtual bool Break { get; protected set; }
-        public bool IsSeparator { get; protected set; }
-        public string InputGestureText { get; protected set; }
-        public ICommand Command { get; protected set; }
-        public TContext Context { get; set; }
-    }
+    public virtual bool     IsEnabled        => true;
+    public         bool     IsSeparator      { get; protected set; }
+    public         TContext Context          { get; set; }
+    public virtual bool     IsVisible        => true;
+    public         int      Order            { get; protected set; }
+    public         string   Icon             { get; protected set; }
+    public         string   Name             { get; protected set; }
+    public virtual bool     Break            { get; protected set; }
+    public         string   InputGestureText { get; protected set; }
+    public         ICommand Command          { get; protected set; }
 }

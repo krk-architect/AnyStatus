@@ -1,49 +1,48 @@
-﻿using AnyStatus.API.Widgets;
+﻿using System;
+using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Quartz;
-using System;
-using System.Threading.Tasks;
 
-namespace AnyStatus.Core.Jobs
+namespace AnyStatus.Core.Jobs;
+
+[DisallowConcurrentExecution]
+public class Job : IJob
 {
-    [DisallowConcurrentExecution]
-    public class Job : IJob
+    private readonly ILogger   _logger;
+    private readonly IMediator _mediator;
+
+    public Job(ILogger logger, IMediator mediator)
     {
-        private readonly ILogger _logger;
-        private readonly IMediator _mediator;
+        _logger   = logger;
+        _mediator = mediator;
+    }
 
-        public Job(ILogger logger, IMediator mediator)
+    public virtual async Task Execute(IJobExecutionContext context)
+    {
+        if (context.JobDetail.JobDataMap.ContainsKey("data") && context.JobDetail.JobDataMap["data"] is IWidget widget && widget.IsEnabled)
         {
-            _logger = logger;
-            _mediator = mediator;
+            await TryExecuteAsync(widget);
         }
+    }
 
-        public virtual async Task Execute(IJobExecutionContext context)
+    private async Task TryExecuteAsync(IWidget widget)
+    {
+        try
         {
-            if (context.JobDetail.JobDataMap.ContainsKey("data") && context.JobDetail.JobDataMap["data"] is IWidget widget && widget.IsEnabled)
-            {
-                await TryExecuteAsync(widget);
-            }
+            var request = widget switch
+                          {
+                              IMetricWidget => MetricRequestFactory.Create((dynamic)widget)
+                            , IStatusWidget => StatusRequestFactory.Create((dynamic)widget)
+                            , _             => throw new NotSupportedException(widget.GetType().FullName + " is not supported by the job scheduler")
+                          };
+
+            await _mediator.Send(request);
         }
-
-        private async Task TryExecuteAsync(IWidget widget)
+        catch (Exception ex)
         {
-            try
-            {
-                var request = widget switch
-                {
-                    IMetricWidget => MetricRequestFactory.Create((dynamic)widget),
-                    IStatusWidget => StatusRequestFactory.Create((dynamic)widget),
-                    _ => throw new NotSupportedException(widget.GetType().FullName + " is not supported by the job scheduler"),
-                };
-
-                await _mediator.Send(request);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while executing job for widget '{widget}'", widget.Name);
-            }
+            _logger.LogError(ex, "An error occurred while executing job for widget '{widget}'", widget.Name);
         }
     }
 }

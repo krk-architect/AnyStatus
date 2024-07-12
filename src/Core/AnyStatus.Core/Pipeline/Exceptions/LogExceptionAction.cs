@@ -1,22 +1,24 @@
-﻿using MediatR.Pipeline;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Diagnostics;
+using MediatR.Pipeline;
+using Microsoft.Extensions.Logging;
 
-namespace AnyStatus.Core.Pipeline.Exceptions
+namespace AnyStatus.Core.Pipeline.Exceptions;
+
+public class LogExceptionAction<TRequest> : RequestExceptionAction<TRequest>
 {
-    public class LogExceptionAction<TRequest> : RequestExceptionAction<TRequest>
+    private readonly ILogger _logger;
+
+    public LogExceptionAction(ILogger logger)
     {
-        private readonly ILogger _logger;
+        _logger = logger;
+    }
 
-        public LogExceptionAction(ILogger logger) => _logger = logger;
-
-        protected override void Execute(TRequest request, Exception exception)
-        {
+    protected override void Execute(TRequest request, Exception exception)
+    {
 #if DEBUG
-            Debug.WriteLine(exception);
+        Debug.WriteLine(exception);
 #endif
-            _logger.LogError(exception, exception.Message);
-        }
+        _logger.LogError(exception, exception.Message);
     }
 }

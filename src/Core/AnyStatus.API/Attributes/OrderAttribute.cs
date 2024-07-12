@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace AnyStatus.API.Attributes
-{
-    public class OrderAttribute : Attribute
-    {
-        public OrderAttribute(int order) => Order = order;
+namespace AnyStatus.API.Attributes;
 
-        public int Order { get; set; }
-    }
+public class OrderAttribute : Attribute
+{
+    public OrderAttribute(int order) { Order = order; }
+
+    public int Order { get; set; }
 }

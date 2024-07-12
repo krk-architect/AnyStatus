@@ -1,8 +1,7 @@
-﻿namespace AnyStatus.Plugins.GitHub.API.Models
+﻿namespace AnyStatus.Plugins.GitHub.API.Models;
+
+internal class GitHubWorkflow
 {
-    internal class GitHubWorkflow
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-    }
+    public string Id   { get; set; }
+    public string Name { get; set; }
 }

@@ -1,40 +1,37 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using SimpleInjector;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using SimpleInjector;
 
-namespace AnyStatus.Core.Pipeline.Behaviors
+namespace AnyStatus.Core.Pipeline.Behaviors;
+
+public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    private readonly ILogger _logger;
+
+    public LoggingBehavior(ILogger logger)
     {
-        private readonly ILogger _logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
-        public LoggingBehavior(ILogger logger)
+    public async Task<TResponse> Handle(TRequest                          request
+                                      , CancellationToken                 cancellationToken
+                                      , RequestHandlerDelegate<TResponse> next)
+    {
+        var stopwatch = Stopwatch.StartNew();
+
+        try
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            return await next().ConfigureAwait(false);
         }
-
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        finally
         {
-            var stopwatch = Stopwatch.StartNew();
+            stopwatch.Stop();
 
-            try
-            {
-                return await next().ConfigureAwait(false);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                stopwatch.Stop();
-
-                _logger.LogTrace("{request} completed in {elapsed}.", request.GetType().ToFriendlyName(), stopwatch.Elapsed);
-            }
+            _logger.LogTrace("{request} completed in {elapsed}.", request.GetType().ToFriendlyName(), stopwatch.Elapsed);
         }
     }
 }

@@ -1,46 +1,47 @@
-﻿using AnyStatus.API.Common;
+﻿using System;
+using System.Linq;
+using AnyStatus.API.Common;
 using AnyStatus.API.Widgets;
 using MediatR;
-using System;
-using System.Linq;
 
-namespace AnyStatus.Apps.Windows.Features.Widgets
+namespace AnyStatus.Apps.Windows.Features.Widgets;
+
+public class DuplicateWidget
 {
-    public class DuplicateWidget
+    public class Request : Request<IWidget>
     {
-        public class Request : Request<IWidget>
+        public Request(IWidget widget) : base(widget) { }
+    }
+
+    public class Handler : RequestHandler<Request>
+    {
+        protected override void Handle(Request request)
         {
-            public Request(IWidget widget) : base(widget) { }
+            var widget = request.Context;
+
+            if (widget.Parent is null)
+            {
+                throw new InvalidOperationException("Parent not found.");
+            }
+
+            var clone = (IWidget)widget.Clone();
+
+            clone.Name = GenerateName(widget);
+
+            widget.Parent.Add(clone);
         }
 
-        public class Handler : RequestHandler<Request>
+        private static string GenerateName(IWidget item)
         {
-            protected override void Handle(Request request)
+            var    i = 1;
+            string name;
+
+            do
             {
-                var widget = request.Context;
+                name = $"{item.Name} #{i++}";
+            } while (item.Parent.Any(child => child.Name == name));
 
-                if (widget.Parent is null)
-                {
-                    throw new InvalidOperationException("Parent not found.");
-                }
-
-                var clone = (IWidget)widget.Clone();
-
-                clone.Name = GenerateName(widget);
-
-                widget.Parent.Add(clone);
-            }
-
-            private static string GenerateName(IWidget item)
-            {
-                var i = 1;
-                string name;
-
-                do name = $"{item.Name} #{i++}";
-                while (item.Parent.Any(child => child.Name == name));
-
-                return name;
-            }
+            return name;
         }
     }
 }

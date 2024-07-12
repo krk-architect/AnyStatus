@@ -1,29 +1,28 @@
-﻿using AnyStatus.API.Common;
-using MediatR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AnyStatus.API.Common;
+using MediatR;
 
-namespace AnyStatus.Core.Pipeline.Validation
+namespace AnyStatus.Core.Pipeline.Validation;
+
+public class DefaultRequestValidator : IValidator<IRequest>
 {
-    public class DefaultRequestValidator : IValidator<IRequest>
+    /// <summary>
+    ///     The default request validator.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <returns>Returns a collection of validation results.</returns>
+    public IEnumerable<ValidationResult> Validate(IRequest request)
     {
-        /// <summary>
-        /// The default request validator.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>Returns a collection of validation results.</returns>
-        public IEnumerable<ValidationResult> Validate(IRequest request)
+        if (request is null)
         {
-            if (request is null)
-            {
-                throw new ValidationException("Request cannot be null.");
-            }
-
-            var failures = new List<ValidationResult>();
-
-            Validator.TryValidateObject(request, new ValidationContext(request, null, null), failures);
-
-            return failures;
+            throw new ValidationException("Request cannot be null.");
         }
+
+        var failures = new List<ValidationResult>();
+
+        Validator.TryValidateObject(request, new (request, null, null), failures);
+
+        return failures;
     }
 }

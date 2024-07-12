@@ -4,49 +4,49 @@
              xmlns:ui="http://schemas.modernwpf.com/2019">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ComboBox HorizontalAlignment="Stretch" Grid.Column="0" Margin="10" DisplayMemberPath="Name" 
-                      ItemsSource="{Binding EndpointTypes}" 
-                      SelectedItem="{Binding SelectedEndpointTypeDescription}" 
-                      ui:ControlHelper.PlaceholderText="Select endpoint..."/>
+            <ComboBox HorizontalAlignment="Stretch" Grid.Column="0" Margin="10" DisplayMemberPath="Name"
+                      ItemsSource="{Binding EndpointTypes}"
+                      SelectedItem="{Binding SelectedEndpointTypeDescription}"
+                      ui:ControlHelper.PlaceholderText="Select endpoint..." />
             <Button Grid.Column="1" Margin="0,10,10,10" DockPanel.Dock="Right" Command="{Binding Commands[Add]}">Add</Button>
         </Grid>
         <ListBox Grid.Row="2" ItemsSource="{Binding Endpoints}" SelectedItem="{Binding SelectedEndpoint}">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource DefaultListBoxItemStyle}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <DockPanel>
-                        <Button DockPanel.Dock="Right" 
-                                Style="{StaticResource ListBoxItemButton}" 
-                                Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.Commands[Delete]}" 
+                        <Button DockPanel.Dock="Right"
+                                Style="{StaticResource ListBoxItemButton}"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.Commands[Delete]}"
                                 CommandParameter="{Binding}"
                                 ToolTip="Delete">
                             <Button.Content>
-                                <ContentControl Content="{Binding Source={StaticResource TrashIcon}}"/>
+                                <ContentControl Content="{Binding Source={StaticResource TrashIcon}}" />
                             </Button.Content>
                         </Button>
-                        <Button DockPanel.Dock="Right" 
-                                Style="{StaticResource ListBoxItemButton}" 
-                                Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.Commands[Edit]}" 
+                        <Button DockPanel.Dock="Right"
+                                Style="{StaticResource ListBoxItemButton}"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.Commands[Edit]}"
                                 CommandParameter="{Binding}"
                                 ToolTip="Edit">
                             <Button.Content>
-                                <ContentControl Content="{Binding Source={StaticResource PencilIcon}}"/>
+                                <ContentControl Content="{Binding Source={StaticResource PencilIcon}}" />
                             </Button.Content>
                         </Button>
-                        <TextBlock FontSize="{StaticResource FontSize}" Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBlock FontSize="{StaticResource FontSize}" Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" />
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

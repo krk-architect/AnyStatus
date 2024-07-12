@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.API.Notifications
+﻿namespace AnyStatus.API.Notifications;
+
+public interface INotificationService
 {
-    public interface INotificationService
-    {
-        void Send(Notification notification);
-    }
+    void Send(Notification notification);
 }

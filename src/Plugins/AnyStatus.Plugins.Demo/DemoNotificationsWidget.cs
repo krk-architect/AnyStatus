@@ -1,30 +1,30 @@
-﻿using AnyStatus.API.Notifications;
+﻿using System.ComponentModel;
+using AnyStatus.API.Notifications;
 using AnyStatus.API.Widgets;
-using System.ComponentModel;
 
-namespace AnyStatus.Plugins.Demo
+namespace AnyStatus.Plugins.Demo;
+
+[Category("AnyStatus")]
+[DisplayName("Notifications Demo")]
+[Description("An example for sending desktop notifications from widgets.")]
+public class DemoNotificationsWidget
+    : TextWidget
+    , IPollable
+    , ICommonWidget { }
+
+public class DemoNotificationsHandler : StatusCheck<DemoNotificationsWidget>
 {
-    [Category("AnyStatus")]
-    [DisplayName("Notifications Demo")]
-    [Description("An example for sending desktop notifications from widgets.")]
-    public class DemoNotificationsWidget : TextWidget, IPollable, ICommonWidget
+    private readonly INotificationService _notificationService;
+
+    public DemoNotificationsHandler(INotificationService notificationService)
     {
+        _notificationService = notificationService;
     }
 
-    public class DemoNotificationsHandler : StatusCheck<DemoNotificationsWidget>
+    protected override void Handle(StatusRequest<DemoNotificationsWidget> request)
     {
-        private readonly INotificationService _notificationService;
+        _notificationService.Send(new ("Message", "Title", NotificationIcon.Info));
 
-        public DemoNotificationsHandler(INotificationService notificationService)
-        {
-            _notificationService = notificationService;
-        }
-
-        protected override void Handle(StatusRequest<DemoNotificationsWidget> request)
-        {
-            _notificationService.Send(new Notification("Message", "Title", NotificationIcon.Info));
-
-            request.Context.Status = Status.OK;
-        }
+        request.Context.Status = Status.OK;
     }
 }

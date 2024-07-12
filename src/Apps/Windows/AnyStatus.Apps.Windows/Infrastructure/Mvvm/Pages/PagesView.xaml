@@ -5,12 +5,12 @@
     <ItemsControl ItemsSource="{Binding Pages}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <Grid/>
+                <Grid />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <pages:PageView DataContext="{Binding}"/>
+                <pages:PageView DataContext="{Binding}" />
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>

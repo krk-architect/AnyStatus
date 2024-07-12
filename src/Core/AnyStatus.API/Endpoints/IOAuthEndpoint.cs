@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Endpoints
-{
-    public interface IOAuthEndpoint : IEndpoint
-    {
-    }
-}
+﻿namespace AnyStatus.API.Endpoints;
+
+public interface IOAuthEndpoint : IEndpoint { }

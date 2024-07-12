@@ -1,9 +1,8 @@
-﻿namespace AnyStatus.API.Endpoints
+﻿namespace AnyStatus.API.Endpoints;
+
+public enum EndpointAuthenticationType
 {
-    public enum EndpointAuthenticationType
-    {
-        None,
-        Basic,
-        PersonalAccessToken
-    }
+    None
+  , Basic
+  , PersonalAccessToken
 }

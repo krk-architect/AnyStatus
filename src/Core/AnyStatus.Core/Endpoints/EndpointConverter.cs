@@ -1,43 +1,45 @@
-﻿using AnyStatus.API.Endpoints;
+﻿using System;
+using AnyStatus.API.Endpoints;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 
-namespace AnyStatus.Core.Endpoints
+namespace AnyStatus.Core.Endpoints;
+
+public class EndpointConverter : JsonConverter
 {
-    public class EndpointConverter : JsonConverter
+    public override bool CanRead  => true;
+    public override bool CanWrite => false;
+
+    public override bool CanConvert(Type objectType) => typeof(IEndpoint).IsAssignableFrom(objectType);
+
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
+
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-        public override bool CanRead => true;
-        public override bool CanWrite => false;
-        public override bool CanConvert(Type objectType) => typeof(IEndpoint).IsAssignableFrom(objectType);
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        var token = JToken.ReadFrom(reader);
+
+        if (token.HasValues)
         {
-            var token = JToken.ReadFrom(reader);
+            var typeName = token.Value<string>("$type");
 
-            if (token.HasValues)
+            if (typeName is not null)
             {
-                var typeName = token.Value<string>("$type");
+                var type = Type.GetType(typeName);
 
-                if (typeName is not null)
+                if (type is null)
                 {
-                    var type = Type.GetType(typeName);
+                    var endpoint = new UnknownEndpoint
+                                   {
+                                       Name = "Unknown Endpoint"
+                                   };
 
-                    if (type is null)
-                    {
-                        var endpoint = new UnknownEndpoint
-                        {
-                            Name = "Unknown Endpoint"
-                        };
+                    serializer.Populate(token.CreateReader(), endpoint);
 
-                        serializer.Populate(token.CreateReader(), endpoint);
-
-                        return endpoint;
-                    }
+                    return endpoint;
                 }
             }
-
-            return serializer.Deserialize(token.CreateReader());
         }
+
+        return serializer.Deserialize(token.CreateReader());
     }
 }

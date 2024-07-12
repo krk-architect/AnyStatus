@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface IDuplicatable
-    {
-    }
-}
+﻿namespace AnyStatus.API.Widgets;
+
+public interface IDuplicatable { }

@@ -1,10 +1,6 @@
-﻿namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Windows
+﻿namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Windows;
+
+public partial class WindowView
 {
-    public partial class WindowView
-    {
-        public WindowView()
-        {
-            InitializeComponent();
-        }
-    }
+    public WindowView() { InitializeComponent(); }
 }

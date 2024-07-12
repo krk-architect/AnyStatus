@@ -1,7 +1,7 @@
-﻿using OpenQA.Selenium.Appium;
-using OpenQA.Selenium.Appium.Windows;
-using System;
+﻿using System;
 using System.IO;
+using OpenQA.Selenium.Appium;
+using OpenQA.Selenium.Appium.Windows;
 using Xunit;
 
 namespace AnyStatus.Apps.Windows.Tests;
@@ -14,7 +14,7 @@ public sealed class AppFixture : IDisposable
 
         opt.AddAdditionalCapability("app", GetAppPath());
 
-        Session = new WindowsDriver<WindowsElement>(new Uri("http://127.0.0.1:4723"), opt);
+        Session = new (new Uri("http://127.0.0.1:4723"), opt);
 
         Assert.NotNull(Session);
 
@@ -24,6 +24,17 @@ public sealed class AppFixture : IDisposable
     }
 
     public WindowsDriver<WindowsElement> Session { get; private set; }
+
+    public void Dispose()
+    {
+        if (Session is null)
+        {
+            return;
+        }
+
+        Session.Quit();
+        Session = null;
+    }
 
     private static string GetAppPath()
     {
@@ -41,16 +52,5 @@ public sealed class AppFixture : IDisposable
         }
 
         return path;
-    }
-
-    public void Dispose()
-    {
-        if (Session is null)
-        {
-            return;
-        }
-
-        Session.Quit();
-        Session = null;
     }
 }

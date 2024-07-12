@@ -11,7 +11,7 @@
 - Install Appium Windows Driver `appium driver install --source=npm appium-windows-driver`
 - Install [WinAppDriver v1.2.1](https://github.com/microsoft/WinAppDriver/releases/download/v1.2.1/WindowsApplicationDriver_1.2.1.msi)
 - Visual Studio 2022 and ReSharper installed
-- .NET 6
+- .NET 8
 
 ### Build
 
@@ -20,7 +20,7 @@
 
 ### Run the tests
 
-- In Admin PowerShell terminal, run `& 'C:\pf86\Windows Application Driver\WinAppDriver.exe'`
+- In Admin PowerShell terminal, run `& 'C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe'`
 - In VS2022, right click on the solution and select `Run Unit Tests`
 
 ## Download

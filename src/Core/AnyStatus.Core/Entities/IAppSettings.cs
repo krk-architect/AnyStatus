@@ -1,25 +1,24 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.Core.App
+namespace AnyStatus.Core.App;
+
+public interface IAppSettings
 {
-    public interface IAppSettings
-    {
-        string InstrumentationKey { get; }
+    string InstrumentationKey { get; }
 
-        string SessionFileName { get; }
+    string SessionFileName { get; }
 
-        string SessionFilePath { get; }
+    string SessionFilePath { get; }
 
-        string EndpointsFileName { get; }
+    string EndpointsFileName { get; }
 
-        string EndpointsFilePath { get; }
+    string EndpointsFilePath { get; }
 
-        string UserSettingsFileName { get; }
+    string UserSettingsFileName { get; }
 
-        string UserSettingsFilePath { get; }
+    string UserSettingsFilePath { get; }
 
-        IEnumerable<string> Resources { get; }
+    IEnumerable<string> Resources { get; }
 
-        string AppDataPath { get; }
-    }
+    string AppDataPath { get; }
 }

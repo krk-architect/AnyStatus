@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Apps.Windows.Features.NamedPipe
+﻿namespace AnyStatus.Apps.Windows.Features.NamedPipe;
+
+public interface INamedPipeClient
 {
-    public interface INamedPipeClient
-    {
-        void Send(string message);
-    }
+    void Send(string message);
 }

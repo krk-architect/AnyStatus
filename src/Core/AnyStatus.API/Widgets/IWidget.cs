@@ -2,32 +2,31 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace AnyStatus.API.Widgets
+namespace AnyStatus.API.Widgets;
+
+public interface IWidget : IList<IWidget>, ICloneable, INotifyPropertyChanged
 {
-    public interface IWidget : IList<IWidget>, ICloneable, INotifyPropertyChanged
-    {
-        string Id { get; set; }
+    string Id { get; set; }
 
-        string Name { get; set; }
+    string Name { get; set; }
 
-        bool IsEnabled { get; set; }
+    bool IsEnabled { get; set; }
 
-        IWidget Parent { get; set; }
+    IWidget Parent { get; set; }
 
-        bool HasChildren { get; }
+    bool HasChildren { get; }
 
-        bool IsExpanded { get; set; }
+    bool IsExpanded { get; set; }
 
-        string Status { get; set; }
+    string Status { get; set; }
 
-        string PreviousStatus { get; }
+    string PreviousStatus { get; }
 
-        void Move(int x, int y);
+    void Move(int x, int y);
 
-        void Expand();
+    void Expand();
 
-        void Reassess();
+    void Reassess();
 
-        bool IsConfigurable();
-    }
+    bool IsConfigurable();
 }

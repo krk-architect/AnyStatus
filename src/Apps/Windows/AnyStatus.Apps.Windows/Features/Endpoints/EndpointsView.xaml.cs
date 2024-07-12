@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Endpoints
+namespace AnyStatus.Apps.Windows.Features.Endpoints;
+
+public partial class EndpointsView : UserControl
 {
-    public partial class EndpointsView : UserControl
-    {
-        public EndpointsView()
-        {
-            InitializeComponent();
-        }
-    }
+    public EndpointsView() { InitializeComponent(); }
 }

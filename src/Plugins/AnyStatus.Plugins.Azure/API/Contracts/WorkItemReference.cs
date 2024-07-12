@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Plugins.Azure.API.Contracts
+﻿namespace AnyStatus.Plugins.Azure.API.Contracts;
+
+public class WorkItemReference
 {
-    public class WorkItemReference
-    {
-        public string Id { get; set; }
-    }
+    public string Id { get; set; }
 }

@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel;
 
-namespace AnyStatus.API.Widgets
-{
-    [Browsable(true)]
-    public class UnknownWidget : Widget, IDeletable, IConfigurable
-    {
-        public UnknownWidget()
-        {
-            IsEnabled = false;
-            Status = Widgets.Status.Unknown;
-        }
+namespace AnyStatus.API.Widgets;
 
-        [ReadOnly(true)]
-        [DisplayName("Type Name")]
-        public string TypeName { get; set; }
+[Browsable(true)]
+public class UnknownWidget : Widget, IDeletable, IConfigurable
+{
+    public UnknownWidget()
+    {
+        IsEnabled = false;
+        Status    = Widgets.Status.Unknown;
     }
+
+    [ReadOnly(true)]
+    [DisplayName("Type Name")]
+    public string TypeName { get; set; }
 }

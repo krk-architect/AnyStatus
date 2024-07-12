@@ -1,19 +1,18 @@
-﻿using AnyStatus.API.Endpoints;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using AnyStatus.API.Endpoints;
 
-namespace AnyStatus.Plugins.UptimeRobot
+namespace AnyStatus.Plugins.UptimeRobot;
+
+[DisplayName("UptimeRobot")]
+public class UptimeRobotEndpoint : Endpoint
 {
-    [DisplayName("UptimeRobot")]
-    public class UptimeRobotEndpoint : Endpoint
+    public UptimeRobotEndpoint()
     {
-        public UptimeRobotEndpoint()
-        {
-            Name = "UptimeRobot";
-            Address = "https://api.uptimerobot.com";
-        }
-
-        [DisplayName("API Key")]
-        [Description("The API key can be found at UptimeRobot under \"My Settings\" page")]
-        public string APIKey { get; set; }
+        Name    = "UptimeRobot";
+        Address = "https://api.uptimerobot.com";
     }
+
+    [DisplayName("API Key")]
+    [Description("The API key can be found at UptimeRobot under \"My Settings\" page")]
+    public string APIKey { get; set; }
 }

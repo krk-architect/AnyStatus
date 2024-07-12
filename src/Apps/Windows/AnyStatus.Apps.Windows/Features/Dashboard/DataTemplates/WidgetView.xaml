@@ -10,11 +10,10 @@
 
     <DockPanel Style="{DynamicResource WidgetPanel}">
         <controls:ColorStatusIndicator
-	        Margin="20,0,0,0"
-	        DockPanel.Dock="Left"
-	        />
-        <controls:IconStatusIndicator DockPanel.Dock="Left"/>
-        <TextBlock Margin="7,0,0,0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+            Margin="20,0,0,0"
+            DockPanel.Dock="Left" />
+        <controls:IconStatusIndicator DockPanel.Dock="Left" />
+        <TextBlock Margin="7,0,0,0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
     </DockPanel>
 
 </UserControl>

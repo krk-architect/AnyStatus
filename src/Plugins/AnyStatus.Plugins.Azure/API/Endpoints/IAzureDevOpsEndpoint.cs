@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Plugins.Azure.API.Endpoints
+﻿namespace AnyStatus.Plugins.Azure.API.Endpoints;
+
+public interface IAzureDevOpsEndpoint : IAzureEndpoint
 {
-    public interface IAzureDevOpsEndpoint : IAzureEndpoint
-    {
-        string ReleaseManagement { get; }
-    }
+    string ReleaseManagement { get; }
 }

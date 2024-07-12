@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Core.App
+﻿namespace AnyStatus.Core.App;
+
+public interface IApp
 {
-    public interface IApp
-    {
-        int Run();
-    }
+    int Run();
 }

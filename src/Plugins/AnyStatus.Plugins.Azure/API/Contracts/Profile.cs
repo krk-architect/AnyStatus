@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Plugins.Azure.API.Contracts
+﻿namespace AnyStatus.Plugins.Azure.API.Contracts;
+
+internal class Profile
 {
-    internal class Profile
-    {
-        public string Id { get; set; }
-    }
+    public string Id { get; set; }
 }

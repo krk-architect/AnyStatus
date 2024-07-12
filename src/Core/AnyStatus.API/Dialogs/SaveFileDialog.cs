@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace AnyStatus.API.Dialogs
+namespace AnyStatus.API.Dialogs;
+
+[ExcludeFromCodeCoverage]
+public class SaveFileDialog : FileDialog
 {
-    [ExcludeFromCodeCoverage]
-    public class SaveFileDialog : FileDialog
-    {
-        public SaveFileDialog(string filter) : base(filter) { }
-    }
+    public SaveFileDialog(string filter) : base(filter) { }
 }

@@ -1,8 +1,7 @@
-﻿namespace AnyStatus.Plugins.SystemInformation.Network
+﻿namespace AnyStatus.Plugins.SystemInformation.Network;
+
+public enum NetworkSpeedDirection
 {
-    public enum NetworkSpeedDirection
-    {
-        Download,
-        Upload
-    }
+    Download
+  , Upload
 }

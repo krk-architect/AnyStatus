@@ -1,15 +1,14 @@
 ﻿using System.Threading.Tasks;
 
-namespace AnyStatus.API.Dialogs
+namespace AnyStatus.API.Dialogs;
+
+public interface IDialogService
 {
-    public interface IDialogService
-    {
-        Task<DialogResult> ShowDialogAsync(IDialog dialog);
+    Task<DialogResult> ShowDialogAsync(IDialog dialog);
 
-        DialogResult ShowMessageBox(IDialog dialog);
-        
-        DialogResult ShowFileDialog(SaveFileDialog saveFileDialog);
+    DialogResult ShowMessageBox(IDialog dialog);
 
-        DialogResult ShowFileDialog(OpenFileDialog openFileDialog);
-    }
+    DialogResult ShowFileDialog(SaveFileDialog saveFileDialog);
+
+    DialogResult ShowFileDialog(OpenFileDialog openFileDialog);
 }

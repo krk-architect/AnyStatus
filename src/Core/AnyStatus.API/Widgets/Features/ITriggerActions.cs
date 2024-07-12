@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.API.Widgets
+namespace AnyStatus.API.Widgets;
+
+internal interface ITriggerActions
 {
-    interface ITriggerActions
-    {
-        ICollection<IActionTrigger> ActionTriggers { get; set; }
-    }
+    ICollection<IActionTrigger> ActionTriggers { get; set; }
 }

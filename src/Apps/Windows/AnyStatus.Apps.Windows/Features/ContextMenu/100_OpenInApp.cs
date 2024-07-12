@@ -4,18 +4,18 @@ using AnyStatus.Apps.Windows.Infrastructure.Mvvm;
 using AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu;
 using MediatR;
 
-namespace AnyStatus.Apps.Windows.Features.ContextMenu.Items
-{
-    public class OpenInBrowser<TWidget> : ContextMenu<TWidget> where TWidget : IOpenInApp
-    {
-        public OpenInBrowser(IMediator mediator)
-        {
-            Order = 100;
-            Name = "Open in App";
-            Icon = "Material.OpenInApp";
-            Command = new Command(async _ => await mediator.Send(new LaunchURL.Request(Context.URL)));
-        }
+namespace AnyStatus.Apps.Windows.Features.ContextMenu.Items;
 
-        public override bool IsEnabled => !string.IsNullOrEmpty(Context.URL);
+public class OpenInBrowser<TWidget> : ContextMenu<TWidget>
+    where TWidget : IOpenInApp
+{
+    public OpenInBrowser(IMediator mediator)
+    {
+        Order   = 100;
+        Name    = "Open in App";
+        Icon    = "Material.OpenInApp";
+        Command = new Command(async _ => await mediator.Send(new LaunchURL.Request(Context.URL)));
     }
+
+    public override bool IsEnabled => !string.IsNullOrEmpty(Context.URL);
 }

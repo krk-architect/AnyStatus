@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Dashboard
+namespace AnyStatus.Apps.Windows.Features.Dashboard;
+
+public partial class DashboardView : UserControl
 {
-    public partial class DashboardView : UserControl
-    {
-        public DashboardView()
-        {
-            InitializeComponent();
-        }
-    }
+    public DashboardView() { InitializeComponent(); }
 }

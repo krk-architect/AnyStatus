@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface IUninitializable
-    {
-    }
-}
+﻿namespace AnyStatus.API.Widgets;
+
+public interface IUninitializable { }

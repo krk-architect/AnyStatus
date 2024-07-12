@@ -1,11 +1,10 @@
-﻿using AnyStatus.API.Widgets;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using AnyStatus.API.Widgets;
 
-namespace AnyStatus.Plugins.Azure.DevOps.PullRequests
+namespace AnyStatus.Plugins.Azure.DevOps.PullRequests;
+
+[Browsable(false)]
+public class AzureDevOpsPullRequestWidget : StatusWidget
 {
-    [Browsable(false)]
-    public class AzureDevOpsPullRequestWidget : StatusWidget
-    {
-        public object PullRequestId { get; internal set; }
-    }
+    public object PullRequestId { get; internal set; }
 }

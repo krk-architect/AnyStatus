@@ -1,12 +1,11 @@
-﻿using MediatR;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MediatR;
 
-namespace AnyStatus.API.Events
+namespace AnyStatus.API.Events;
+
+public static class WidgetNotifications
 {
-    public static class WidgetNotifications
-    {
-        public static IMediator Mediator { get; set; }
+    public static IMediator Mediator { get; set; }
 
-        public static Task PublishAsync(INotification notification) => Mediator?.Publish(notification);
-    }
+    public static Task PublishAsync(INotification notification) => Mediator?.Publish(notification);
 }

@@ -1,13 +1,12 @@
-﻿using AnyStatus.API.Widgets;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using AnyStatus.API.Widgets;
 
-namespace AnyStatus.Plugins.GitHub.Issues
+namespace AnyStatus.Plugins.GitHub.Issues;
+
+[Browsable(false)]
+public class GitHubIssueWidget : Widget, IOpenInApp
 {
-    [Browsable(false)]
-    public class GitHubIssueWidget : Widget, IOpenInApp
-    {
-        public string Number { get; set; }
+    public string Number { get; set; }
 
-        public string URL { get; set; }
-    }
+    public string URL { get; set; }
 }

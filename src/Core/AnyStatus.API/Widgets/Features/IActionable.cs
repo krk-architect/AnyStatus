@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface IActionable
-    {
-    }
-}
+﻿namespace AnyStatus.API.Widgets;
+
+public interface IActionable { }

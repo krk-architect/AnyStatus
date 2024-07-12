@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.API.Endpoints
+namespace AnyStatus.API.Endpoints;
+
+public interface IEndpointProvider
 {
-    public interface IEndpointProvider
-    {
-        IEnumerable<IEndpoint> GetEndpoints();
+    IEnumerable<IEndpoint> GetEndpoints();
 
-        IEndpoint GetEndpoint(string id);
+    IEndpoint GetEndpoint(string id);
 
-        T GetEndpoint<T>(string id) where T : IEndpoint;
-    }
+    T GetEndpoint<T>(string id)
+        where T : IEndpoint;
 }

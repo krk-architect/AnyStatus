@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.Plugins.Binance.Models
+namespace AnyStatus.Plugins.Binance.Models;
+
+public class BinanceSymbolsResponse
 {
-    public class BinanceSymbolsResponse
-    {
-        public List<BinanceSymbol> Symbols { get; set; }
-    }
+    public List<BinanceSymbol> Symbols { get; set; }
 }

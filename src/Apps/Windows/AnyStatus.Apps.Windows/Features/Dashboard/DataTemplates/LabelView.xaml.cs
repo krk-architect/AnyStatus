@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Dashboard.DataTemplates
+namespace AnyStatus.Apps.Windows.Features.Dashboard.DataTemplates;
+
+public partial class LabelView : UserControl
 {
-    public partial class LabelView : UserControl
-    {
-        public LabelView()
-        {
-            InitializeComponent();
-        }
-    }
+    public LabelView() { InitializeComponent(); }
 }

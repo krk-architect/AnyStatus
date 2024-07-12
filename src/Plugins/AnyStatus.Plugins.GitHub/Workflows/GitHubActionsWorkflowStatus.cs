@@ -1,21 +1,22 @@
-﻿using AnyStatus.API.Endpoints;
-using AnyStatus.API.Widgets;
-using AnyStatus.Plugins.GitHub.API;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Endpoints;
+using AnyStatus.API.Widgets;
+using AnyStatus.Plugins.GitHub.API;
 
-namespace AnyStatus.Plugins.GitHub.Workflows
+namespace AnyStatus.Plugins.GitHub.Workflows;
+
+public class GitHubActionsWorkflowStatus : AsyncStatusCheck<GitHubActionsWorkflowStatusWidget>, IEndpointHandler<GitHubEndpoint>
 {
-    public class GitHubActionsWorkflowStatus : AsyncStatusCheck<GitHubActionsWorkflowStatusWidget>, IEndpointHandler<GitHubEndpoint>
+    public GitHubEndpoint Endpoint { get; set; }
+
+    protected override async Task Handle(StatusRequest<GitHubActionsWorkflowStatusWidget> request, CancellationToken cancellationToken)
     {
-        public GitHubEndpoint Endpoint { get; set; }
+        var response = await new GitHubAPI(Endpoint).GetWorkflowRunsAsync(request.Context.Repository
+                                                                        , request.Context.Workflow
+                                                                        , request.Context.Branch);
 
-        protected override async Task Handle(StatusRequest<GitHubActionsWorkflowStatusWidget> request, CancellationToken cancellationToken)
-        {
-            var response = await new GitHubAPI(Endpoint).GetWorkflowRunsAsync(request.Context.Repository, request.Context.Workflow, request.Context.Branch);
-
-            request.Context.Status = response.WorkflowRuns?.FirstOrDefault()?.GetStatus() ?? Status.Unknown;
-        }
+        request.Context.Status = response.WorkflowRuns?.FirstOrDefault()?.GetStatus() ?? Status.Unknown;
     }
 }

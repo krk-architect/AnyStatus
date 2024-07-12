@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Plugins.Jenkins.API.Models
+﻿namespace AnyStatus.Plugins.Jenkins.API.Models;
+
+public class JenkinsJobProgress
 {
-    public class JenkinsJobProgress
-    {
-        public int Progress { get; set; }
-    }
+    public int Progress { get; set; }
 }

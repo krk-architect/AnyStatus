@@ -1,29 +1,25 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace AnyStatus.API.Common
+namespace AnyStatus.API.Common;
+
+public class NotifyPropertyChanged : INotifyPropertyChanged
 {
-    public class NotifyPropertyChanged : INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null) => PropertyChanged?.Invoke(this, new (propertyName));
+
+    protected virtual bool Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        if (Equals(oldValue, newValue))
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return false;
         }
 
-        protected virtual bool Set<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
-        {
-            if (Equals(oldValue, newValue))
-            {
-                return false;
-            }
+        oldValue = newValue;
 
-            oldValue = newValue;
+        OnPropertyChanged(propertyName);
 
-            OnPropertyChanged(propertyName);
-
-            return true;
-        }
+        return true;
     }
 }

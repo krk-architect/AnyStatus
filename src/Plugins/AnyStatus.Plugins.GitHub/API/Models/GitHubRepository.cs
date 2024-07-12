@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Plugins.GitHub.API.Models
+﻿namespace AnyStatus.Plugins.GitHub.API.Models;
+
+internal class GitHubRepository
 {
-    internal class GitHubRepository
-    {
-        public string FullName { get; set; }
-    }
+    public string FullName { get; set; }
 }

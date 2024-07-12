@@ -1,12 +1,10 @@
-﻿using AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu;
 
-namespace AnyStatus.Apps.Windows.Features.ContextMenu
+namespace AnyStatus.Apps.Windows.Features.ContextMenu;
+
+public interface IContextMenuViewModel
 {
-    public interface IContextMenuViewModel
-    {
-        void Clear();
-
-        ICollection<IContextMenu> Items { get; set; }
-    }
+    ICollection<IContextMenu> Items { get; set; }
+    void                      Clear();
 }

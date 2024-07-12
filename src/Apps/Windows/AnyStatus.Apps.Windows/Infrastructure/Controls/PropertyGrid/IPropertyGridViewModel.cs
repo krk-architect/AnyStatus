@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid
-{
-    internal interface IPropertyGridViewModel
-    {
-        object Target { get; set; }
+namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid;
 
-        IEnumerable<IPropertyViewModel> Properties { get; }
-    }
+internal interface IPropertyGridViewModel
+{
+    object Target { get; set; }
+
+    IEnumerable<IPropertyViewModel> Properties { get; }
 }

@@ -1,51 +1,50 @@
-﻿using AnyStatus.API.Common;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using AnyStatus.API.Common;
 using AnyStatus.API.Widgets;
 using AnyStatus.Core.App;
 using MediatR;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
-namespace AnyStatus.Apps.Windows.Features.Widgets
+namespace AnyStatus.Apps.Windows.Features.Widgets;
+
+public class AddFolder
 {
-    public class AddFolder
+    public class Request : IRequest
     {
-        public class Request : IRequest
-        {
-            public Request(IWidget parent) => Parent = parent;
+        public Request(IWidget parent) { Parent = parent; }
 
-            public IWidget Parent { get; }
-        }
+        public IWidget Parent { get; }
+    }
 
-        public class Validator : IValidator<Request>
+    public class Validator : IValidator<Request>
+    {
+        public IEnumerable<ValidationResult> Validate(Request request)
         {
-            public IEnumerable<ValidationResult> Validate(Request request)
+            if (request.Parent is null)
             {
-                if (request.Parent is null)
-                {
-                    yield return new ValidationResult("Parent is required.");
-                }
+                yield return new ("Parent is required.");
             }
         }
+    }
 
-        public class Handler : RequestHandler<Request>
+    public class Handler : RequestHandler<Request>
+    {
+        private readonly IAppContext _context;
+
+        public Handler(IAppContext context) { _context = context; }
+
+        protected override void Handle(Request request)
         {
-            private readonly IAppContext _context;
+            var folder = new FolderWidget
+                         {
+                             Name = "New Folder"
+                         };
 
-            public Handler(IAppContext context) => _context = context;
+            request.Parent.Add(folder);
 
-            protected override void Handle(Request request)
-            {
-                var folder = new FolderWidget
-                {
-                    Name = "New Folder"
-                };
+            request.Parent.IsExpanded = true;
 
-                request.Parent.Add(folder);
-
-                request.Parent.IsExpanded = true;
-
-                _context.Session.IsDirty = true;
-            }
+            _context.Session.IsDirty = true;
         }
     }
 }

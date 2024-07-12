@@ -1,21 +1,20 @@
-﻿using AnyStatus.API.Endpoints;
-using AnyStatus.Core.App;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using AnyStatus.API.Endpoints;
+using AnyStatus.Core.App;
 
-namespace AnyStatus.Core.Endpoints
+namespace AnyStatus.Core.Endpoints;
+
+public class EndpointProvider : IEndpointProvider
 {
-    public class EndpointProvider : IEndpointProvider
-    {
-        private readonly IAppContext _context;
+    private readonly IAppContext _context;
 
-        public EndpointProvider(IAppContext context) => _context = context;
+    public EndpointProvider(IAppContext context) { _context = context; }
 
-        public IEnumerable<IEndpoint> GetEndpoints() => _context.Endpoints;
+    public IEnumerable<IEndpoint> GetEndpoints() => _context.Endpoints;
 
-        public IEndpoint GetEndpoint(string id) => _context.Endpoints?.FirstOrDefault(endpoint => endpoint.Id.Equals(id));
+    public IEndpoint GetEndpoint(string id) => _context.Endpoints?.FirstOrDefault(endpoint => endpoint.Id.Equals(id));
 
-        public T GetEndpoint<T>(string id) where T : IEndpoint
-            => (T)_context.Endpoints?.FirstOrDefault(endpoint => endpoint.Id.Equals(id) && endpoint is T);
-    }
+    public T GetEndpoint<T>(string id)
+        where T : IEndpoint => (T)_context.Endpoints?.FirstOrDefault(endpoint => endpoint.Id.Equals(id) && endpoint is T);
 }

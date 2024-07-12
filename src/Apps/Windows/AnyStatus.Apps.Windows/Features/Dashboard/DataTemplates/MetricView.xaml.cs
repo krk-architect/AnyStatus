@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Dashboard.DataTemplates
+namespace AnyStatus.Apps.Windows.Features.Dashboard.DataTemplates;
+
+public partial class MetricView : UserControl
 {
-    public partial class MetricView : UserControl
-    {
-        public MetricView()
-        {
-            InitializeComponent();
-        }
-    }
+    public MetricView() { InitializeComponent(); }
 }

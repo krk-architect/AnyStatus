@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace AnyStatus.Apps.Windows.Features.NamedPipe
-{
-    internal interface INamedPipeServer
-    {
+namespace AnyStatus.Apps.Windows.Features.NamedPipe;
 
-        Task StartAsync();
-    }
+internal interface INamedPipeServer
+{
+    Task StartAsync();
 }

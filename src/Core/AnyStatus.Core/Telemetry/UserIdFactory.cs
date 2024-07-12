@@ -2,26 +2,25 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace AnyStatus.Core.Telemetry
+namespace AnyStatus.Core.Telemetry;
+
+internal class UserIdFactory
 {
-    internal class UserIdFactory
+    internal string Create()
     {
-        internal string Create()
+        try
         {
-            try
-            {
-                var bytes = Encoding.UTF8.GetBytes(Environment.UserName + Environment.MachineName);
+            var bytes = Encoding.UTF8.GetBytes(Environment.UserName + Environment.MachineName);
 
-                using var crypto = new MD5CryptoServiceProvider();
+            using var crypto = MD5.Create();
 
-                var hash = crypto.ComputeHash(bytes);
+            var hash = crypto.ComputeHash(bytes);
 
-                return Convert.ToBase64String(hash);
-            }
-            catch
-            {
-                return null;
-            }
+            return Convert.ToBase64String(hash);
+        }
+        catch
+        {
+            return null;
         }
     }
 }

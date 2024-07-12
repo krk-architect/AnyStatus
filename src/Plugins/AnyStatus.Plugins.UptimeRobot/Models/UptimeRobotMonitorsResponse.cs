@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.Plugins.UptimeRobot.Models
+namespace AnyStatus.Plugins.UptimeRobot.Models;
+
+internal class UptimeRobotMonitorsResponse
 {
-    internal class UptimeRobotMonitorsResponse
-    {
-        public IEnumerable<UptimeRobotMonitor> Monitors { get; set; }
-    }
+    public IEnumerable<UptimeRobotMonitor> Monitors { get; set; }
 }

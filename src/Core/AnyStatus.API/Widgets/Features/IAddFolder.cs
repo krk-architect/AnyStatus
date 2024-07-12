@@ -1,10 +1,5 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface IAddWidget
-    {
-    }
+﻿namespace AnyStatus.API.Widgets;
 
-    public interface IAddFolder
-    {
-    }
-}
+public interface IAddWidget { }
+
+public interface IAddFolder { }

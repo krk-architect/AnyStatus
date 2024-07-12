@@ -3,43 +3,43 @@
                     xmlns:activity="clr-namespace:AnyStatus.Apps.Windows.Features.Activity"
                     xmlns:settings="clr-namespace:AnyStatus.Apps.Windows.Features.Settings"
                     xmlns:app="clr-namespace:AnyStatus.Apps.Windows.Features.App"
-                    xmlns:widgets="clr-namespace:AnyStatus.Apps.Windows.Features.Widgets" 
+                    xmlns:widgets="clr-namespace:AnyStatus.Apps.Windows.Features.Widgets"
                     xmlns:endpoints="clr-namespace:AnyStatus.Apps.Windows.Features.Endpoints" xmlns:help="clr-namespace:AnyStatus.Apps.Windows.Features.Help">
 
     <DataTemplate DataType="{x:Type app:AppViewModel}">
-        <app:AppView/>
+        <app:AppView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type help:HelpViewModel}">
-        <help:HelpView/>
+        <help:HelpView />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type activity:ActivityViewModel}">
-        <activity:ActivityView/>
+        <activity:ActivityView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type settings:SettingsViewModel}">
-        <settings:SettingsView/>
+        <settings:SettingsView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type endpoints:EndpointsViewModel}">
-        <endpoints:EndpointsView/>
+        <endpoints:EndpointsView />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type endpoints:EndpointViewModel}">
-        <endpoints:EndpointView/>
+        <endpoints:EndpointView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type endpoints:OAuthEndpointViewModel}">
-        <endpoints:OAuthEndpointView/>
+        <endpoints:OAuthEndpointView />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type widgets:AddWidgetViewModel}">
-        <widgets:AddWidgetView/>
+        <widgets:AddWidgetView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type widgets:WidgetViewModel}">
-        <widgets:WidgetView/>
+        <widgets:WidgetView />
     </DataTemplate>
 
 </ResourceDictionary>

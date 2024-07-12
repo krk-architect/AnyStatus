@@ -1,15 +1,11 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages
+namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages;
+
+/// <summary>
+///     Interaction logic for PageView.xaml
+/// </summary>
+public partial class PageView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for PageView.xaml
-    /// </summary>
-    public partial class PageView : UserControl
-    {
-        public PageView()
-        {
-            InitializeComponent();
-        }
-    }
+    public PageView() { InitializeComponent(); }
 }

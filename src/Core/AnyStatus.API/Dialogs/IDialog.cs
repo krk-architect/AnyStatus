@@ -1,9 +1,8 @@
-﻿namespace AnyStatus.API.Dialogs
-{
-    public interface IDialog
-    {
-        string Title { get; set; }
+﻿namespace AnyStatus.API.Dialogs;
 
-        string Message { get; set; }
-    }
+public interface IDialog
+{
+    string Title { get; set; }
+
+    string Message { get; set; }
 }

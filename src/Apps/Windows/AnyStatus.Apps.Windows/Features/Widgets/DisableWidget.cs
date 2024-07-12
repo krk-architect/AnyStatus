@@ -1,34 +1,30 @@
 ﻿using AnyStatus.API.Widgets;
 using MediatR;
 
-namespace AnyStatus.Apps.Windows.Features.Widgets
+namespace AnyStatus.Apps.Windows.Features.Widgets;
+
+public class DisableWidget
 {
-    public class DisableWidget
+    public class Request : IRequest
     {
-        public class Request : IRequest
+        public Request(IWidget widget) { Widget = widget; }
+
+        public IWidget Widget { get; }
+    }
+
+    public class Handler : RequestHandler<Request>
+    {
+        protected override void Handle(Request request) { Disable(request.Widget); }
+
+        private static void Disable(IWidget widget)
         {
-            public Request(IWidget widget) => Widget = widget;
+            widget.Status = Status.None;
 
-            public IWidget Widget { get; }
-        }
+            widget.IsEnabled = false;
 
-        public class Handler : RequestHandler<Request>
-        {
-            protected override void Handle(Request request)
+            foreach (var child in widget)
             {
-                Disable(request.Widget);
-            }
-
-            private static void Disable(IWidget widget)
-            {
-                widget.Status = Status.None;
-
-                widget.IsEnabled = false;
-
-                foreach (var child in widget)
-                {
-                    Disable(child);
-                }
+                Disable(child);
             }
         }
     }

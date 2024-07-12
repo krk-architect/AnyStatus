@@ -4,16 +4,16 @@ using AnyStatus.Apps.Windows.Infrastructure.Mvvm;
 using AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu;
 using MediatR;
 
-namespace AnyStatus.Apps.Windows.Features.ContextMenu.Items
+namespace AnyStatus.Apps.Windows.Features.ContextMenu.Items;
+
+public class Duplicate<T> : ContextMenu<T>
+    where T : IWidget, IDuplicatable
 {
-    public class Duplicate<T> : ContextMenu<T> where T : IWidget, IDuplicatable
+    public Duplicate(IMediator mediator)
     {
-        public Duplicate(IMediator mediator)
-        {
-            Order = 230;
-            Name = "Duplicate";
-            Icon = "Material.ContentDuplicate";
-            Command = new Command(_ => mediator.Send(new DuplicateWidget.Request(Context)));
-        }
+        Order   = 230;
+        Name    = "Duplicate";
+        Icon    = "Material.ContentDuplicate";
+        Command = new Command(_ => mediator.Send(new DuplicateWidget.Request(Context)));
     }
 }

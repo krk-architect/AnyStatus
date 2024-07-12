@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace AnyStatus.Apps.Windows.Features.Endpoints
-{
-    internal class EndpointTypeDescription
-    {
-        public string Name { get; set; }
+namespace AnyStatus.Apps.Windows.Features.Endpoints;
 
-        public Type Type { get; set; }
-    }
+internal class EndpointTypeDescription
+{
+    public string Name { get; set; }
+
+    public Type Type { get; set; }
 }

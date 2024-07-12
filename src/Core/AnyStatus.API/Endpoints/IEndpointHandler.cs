@@ -1,7 +1,7 @@
-﻿namespace AnyStatus.API.Endpoints
+﻿namespace AnyStatus.API.Endpoints;
+
+public interface IEndpointHandler<TEndpoint>
+    where TEndpoint : IEndpoint
 {
-    public interface IEndpointHandler<TEndpoint> where TEndpoint : IEndpoint
-    {
-        TEndpoint Endpoint { get; set; }
-    }
+    TEndpoint Endpoint { get; set; }
 }

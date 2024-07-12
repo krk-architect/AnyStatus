@@ -9,22 +9,22 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=widgets:StatusWidget, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
-        <converters:TimeConverter x:Key="TimeConverter"/>
+        <converters:TimeConverter x:Key="TimeConverter" />
     </UserControl.Resources>
     <DockPanel Style="{DynamicResource WidgetPanel}">
         <DockPanel.ToolTip>
             <TextBlock>
                 <Run Text="{Binding BuildNumber}" />
                 <Run Text=" " />
-                <Run Text="{Binding FinishTime, Converter={StaticResource TimeConverter}}"/>
+                <Run Text="{Binding FinishTime, Converter={StaticResource TimeConverter}}" />
                 <Run Text=" " />
-                <Run Text="{Binding Duration, Converter={StaticResource TimeConverter}}"/>
+                <Run Text="{Binding Duration, Converter={StaticResource TimeConverter}}" />
             </TextBlock>
         </DockPanel.ToolTip>
         <controls:ColorStatusIndicator
-	        Margin="20,0,0,0"
-	        DockPanel.Dock="Left"/>
-        <controls:IconStatusIndicator DockPanel.Dock="Left"/>
-        <TextBlock Text="{Binding Name}" Margin="7,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+            Margin="20,0,0,0"
+            DockPanel.Dock="Left" />
+        <controls:IconStatusIndicator DockPanel.Dock="Left" />
+        <TextBlock Text="{Binding Name}" Margin="7,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
     </DockPanel>
 </UserControl>

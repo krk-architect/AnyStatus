@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.Plugins.Azure.API.Contracts
+namespace AnyStatus.Plugins.Azure.API.Contracts;
+
+public class AzureCollectionResponse<T>
 {
-    public class AzureCollectionResponse<T>
-    {
-        public IEnumerable<T> Value { get; set; }
-    }
+    public IEnumerable<T> Value { get; set; }
 }

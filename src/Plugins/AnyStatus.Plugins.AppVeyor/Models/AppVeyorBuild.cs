@@ -1,9 +1,8 @@
-﻿namespace AnyStatus.Plugins.AppVeyor.Models
-{
-    internal class AppVeyorBuild
-    {
-        public string Version { get; set; }
+﻿namespace AnyStatus.Plugins.AppVeyor.Models;
 
-        public string Status { get; set; }
-    }
+internal class AppVeyorBuild
+{
+    public string Version { get; set; }
+
+    public string Status { get; set; }
 }

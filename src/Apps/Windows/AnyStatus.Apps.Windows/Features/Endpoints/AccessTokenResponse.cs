@@ -1,11 +1,10 @@
-﻿namespace AnyStatus.Apps.Windows.Features.Endpoints
+﻿namespace AnyStatus.Apps.Windows.Features.Endpoints;
+
+internal class AccessTokenResponse
 {
-    class AccessTokenResponse
-    {
-        public bool Success { get; set; }
+    public bool Success { get; set; }
 
-        public string AccessToken { get; set; }
+    public string AccessToken { get; set; }
 
-        public string RefreshToken { get; set; }
-    }
+    public string RefreshToken { get; set; }
 }

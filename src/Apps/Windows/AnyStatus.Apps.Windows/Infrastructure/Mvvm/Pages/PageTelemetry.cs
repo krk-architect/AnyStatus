@@ -1,23 +1,22 @@
-﻿using AnyStatus.Core.Telemetry;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AnyStatus.Core.Telemetry;
 using MediatR;
 using MediatR.Pipeline;
 using SimpleInjector;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages
+namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Pages;
+
+internal class PageTelemetry : IRequestPostProcessor<Page, Unit>
 {
-    internal class PageTelemetry : IRequestPostProcessor<Page, Unit>
+    private readonly ITelemetry _telemetry;
+
+    public PageTelemetry(ITelemetry telemetry) { _telemetry = telemetry; }
+
+    public Task Process(Page request, Unit response, CancellationToken cancellationToken)
     {
-        private readonly ITelemetry _telemetry;
+        _telemetry.TrackView(request.Type.ToFriendlyName());
 
-        public PageTelemetry(ITelemetry telemetry) => _telemetry = telemetry;
-
-        public Task Process(Page request, Unit response, CancellationToken cancellationToken)
-        {
-            _telemetry.TrackView(request.Type.ToFriendlyName());
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

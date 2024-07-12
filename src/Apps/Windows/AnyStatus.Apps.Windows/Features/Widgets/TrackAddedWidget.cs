@@ -1,32 +1,31 @@
-﻿using AnyStatus.API.Events;
-using AnyStatus.Core.Telemetry;
-using MediatR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using AnyStatus.API.Events;
+using AnyStatus.Core.Telemetry;
+using MediatR;
 
-namespace AnyStatus.Apps.Windows.Features.Widgets
+namespace AnyStatus.Apps.Windows.Features.Widgets;
+
+public class TrackAddedWidget : NotificationHandler<WidgetAddedNotification>
 {
-    public class TrackAddedWidget : NotificationHandler<WidgetAddedNotification>
+    private readonly ITelemetry _telemetry;
+
+    public TrackAddedWidget(ITelemetry telemetry) { _telemetry = telemetry; }
+
+    protected override void Handle(WidgetAddedNotification notification)
     {
-        private readonly ITelemetry _telemetry;
+        var type     = notification.Widget.GetType();
+        var name     = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
+        var category = type.GetCustomAttribute<CategoryAttribute>()?.Category       ?? "Unknown";
 
-        public TrackAddedWidget(ITelemetry telemetry) => _telemetry = telemetry;
+        var properties = new Dictionary<string, string>
+                         {
+                             { "Name", name }
+                           , { "Category",  category }
+                           , { "Type", type.FullName }
+                         };
 
-        protected override void Handle(WidgetAddedNotification notification)
-        {
-            var type = notification.Widget.GetType();
-            var name = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
-            var category = type.GetCustomAttribute<CategoryAttribute>()?.Category ?? "Unknown";
-
-            var properties = new Dictionary<string, string>
-                {
-                    { "Name", name},
-                    { "Category",  category},
-                    { "Type", type.FullName },
-                };
-
-            _telemetry.TrackEvent("Add Widget", properties);
-        }
+        _telemetry.TrackEvent("Add Widget", properties);
     }
 }

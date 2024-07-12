@@ -1,9 +1,8 @@
-﻿namespace AnyStatus.Plugins.Binance.Models
+﻿namespace AnyStatus.Plugins.Binance.Models;
+
+public class BinanceSymbol
 {
-    public class BinanceSymbol
-    {
-        public string Symbol { get; set; }
-        public string BaseAsset { get; set; }
-        public string QuoteAsset { get; set; }
-    }
+    public string Symbol     { get; set; }
+    public string BaseAsset  { get; set; }
+    public string QuoteAsset { get; set; }
 }

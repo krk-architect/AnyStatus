@@ -1,11 +1,10 @@
-﻿using AnyStatus.API.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Input;
+using AnyStatus.API.Common;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm
+namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm;
+
+public abstract class BaseViewModel : NotifyPropertyChanged
 {
-    public abstract class BaseViewModel : NotifyPropertyChanged
-    {
-        public Dictionary<string, ICommand> Commands { get; } = new Dictionary<string, ICommand>();
-    }
+    public Dictionary<string, ICommand> Commands { get; } = [];
 }

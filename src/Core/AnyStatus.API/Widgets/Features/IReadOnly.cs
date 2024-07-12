@@ -1,6 +1,3 @@
-﻿namespace AnyStatus.API.Widgets
-{
-    public interface IReadOnly
-    {
-    }
-}
+﻿namespace AnyStatus.API.Widgets;
+
+public interface IReadOnly { }

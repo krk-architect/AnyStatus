@@ -1,11 +1,10 @@
-﻿namespace AnyStatus.API.Endpoints
+﻿namespace AnyStatus.API.Endpoints;
+
+public interface IEndpoint
 {
-    public interface IEndpoint
-    {
-        string Id { get; set; }
+    string Id { get; set; }
 
-        string Name { get; set; }
+    string Name { get; set; }
 
-        string Address { get; set; }
-    }
+    string Address { get; set; }
 }

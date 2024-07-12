@@ -1,10 +1,9 @@
-﻿namespace AnyStatus.API.Notifications
+﻿namespace AnyStatus.API.Notifications;
+
+public enum NotificationIcon
 {
-    public enum NotificationIcon
-    {
-        None,
-        Info,
-        Warning,
-        Error
-    }
+    None
+  , Info
+  , Warning
+  , Error
 }

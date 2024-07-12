@@ -1,42 +1,44 @@
-﻿using AnyStatus.API.Widgets;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+using AnyStatus.API.Widgets;
 
-namespace AnyStatus.Apps.Windows.Infrastructure.Converters
+namespace AnyStatus.Apps.Windows.Infrastructure.Converters;
+
+public class StatusColorConverter : IValueConverter
 {
-    public class StatusColorConverter : IValueConverter
+    private readonly BrushConverter _brushConverter = new();
+
+    public object Convert(object      value
+                        , Type        targetType
+                        , object      parameter
+                        , CultureInfo culture)
     {
-        private readonly BrushConverter _brushConverter = new();
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value is null)
         {
-            if (value is null)
-            {
-                return Brushes.Transparent;
-            }
-
-            var hex = Status.Color(value.ToString());
-
-            if (string.IsNullOrEmpty(hex))
-            {
-                return Brushes.Transparent;
-            }
-
-            try
-            {
-                return _brushConverter.ConvertFromString(hex);
-            }
-            catch (NotSupportedException)
-            {
-                return Brushes.Transparent;
-            }
+            return Brushes.Transparent;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        var hex = Status.Color(value.ToString());
+
+        if (string.IsNullOrEmpty(hex))
         {
-            throw new NotImplementedException();
+            return Brushes.Transparent;
+        }
+
+        try
+        {
+            return _brushConverter.ConvertFromString(hex);
+        }
+        catch (NotSupportedException)
+        {
+            return Brushes.Transparent;
         }
     }
+
+    public object ConvertBack(object      value
+                            , Type        targetType
+                            , object      parameter
+                            , CultureInfo culture) => throw new NotImplementedException();
 }

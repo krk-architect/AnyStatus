@@ -1,32 +1,34 @@
-﻿using AnyStatus.API.Attributes;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AnyStatus.API.Attributes;
 using AnyStatus.API.Endpoints;
 using AnyStatus.Plugins.AppVeyor.API;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace AnyStatus.Plugins.AppVeyor
+namespace AnyStatus.Plugins.AppVeyor;
+
+public class AppVeyorProjectSource : IAsyncItemsSource
 {
-    public class AppVeyorProjectSource : IAsyncItemsSource
+    private readonly IEndpointProvider _endpointsProvider;
+
+    public AppVeyorProjectSource(IEndpointProvider endpointsProvider)
     {
-        private readonly IEndpointProvider _endpointsProvider;
+        _endpointsProvider = endpointsProvider;
+    }
 
-        public AppVeyorProjectSource(IEndpointProvider endpointsProvider) => _endpointsProvider = endpointsProvider;
+    public async Task<IEnumerable<NameValueItem>> GetItemsAsync(object source)
+    {
+        var results = new List<NameValueItem>();
 
-        public async Task<IEnumerable<NameValueItem>> GetItemsAsync(object source)
+        if (source is AppVeyorBuildWidget widget && !string.IsNullOrEmpty(widget.EndpointId) && _endpointsProvider.GetEndpoint(widget.EndpointId) is AppVeyorEndpoint endpoint)
         {
-            List<NameValueItem> results = new List<NameValueItem>();
+            var response = await new AppVeyorAPI(endpoint).GetProjectsAsync();
 
-            if (source is AppVeyorBuildWidget widget && !string.IsNullOrEmpty(widget.EndpointId) && _endpointsProvider.GetEndpoint(widget.EndpointId) is AppVeyorEndpoint endpoint)
+            foreach (var project in response)
             {
-                var response = await new AppVeyorAPI(endpoint).GetProjectsAsync();
-
-                foreach (var project in response)
-                {
-                    results.Add(new NameValueItem(project.Name, project.Slug));
-                }
+                results.Add(new (project.Name, project.Slug));
             }
-
-            return results;
         }
+
+        return results;
     }
 }

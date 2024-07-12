@@ -1,11 +1,10 @@
-﻿namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid
+﻿namespace AnyStatus.Apps.Windows.Infrastructure.Mvvm.Controls.PropertyGrid;
+
+public interface IPropertyViewModel
 {
-    public interface IPropertyViewModel
-    {
-        string Header { get; set; }
+    string Header { get; set; }
 
-        bool IsReadOnly { get; set; }
+    bool IsReadOnly { get; set; }
 
-        object Value { get; set; }
-    }
+    object Value { get; set; }
 }

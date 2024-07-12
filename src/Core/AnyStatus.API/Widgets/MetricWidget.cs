@@ -1,97 +1,93 @@
-﻿using AnyStatus.API.Common;
-using MediatR;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Common;
+using MediatR;
+using Newtonsoft.Json;
 
-namespace AnyStatus.API.Widgets
+namespace AnyStatus.API.Widgets;
+
+public abstract class MetricWidget : Widget, IMetricWidget
 {
-    public abstract class MetricWidget : Widget, IMetricWidget
+    private double?                      _maxValue;
+    private double?                      _minValue;
+    private double                       _value;
+    private ObservableCollection<double> _values = new();
+
+    [JsonIgnore]
+    [Browsable(false)]
+    public ObservableCollection<double> Values
     {
-        private double _value;
-        private double? _minValue;
-        private double? _maxValue;
-        private ObservableCollection<double> _values = new();
+        get => _values;
+        private set => Set(ref _values, value);
+    }
 
-        [JsonIgnore]
-        [Browsable(false)]
-        public double Value
+    [JsonIgnore]
+    [Browsable(false)]
+    public double Value
+    {
+        get => _value;
+        set
         {
-            get => _value;
-            set
-            {
-                Set(ref _value, value);
+            Set(ref _value, value);
 
-                Values.Add(value); // todo: limit by Size / consider moving to post-processor
-            }
-        }
-
-        [JsonIgnore]
-        [Browsable(false)]
-        public double? MinValue
-        {
-            get => _minValue;
-            set => Set(ref _minValue, value);
-        }
-
-        [JsonIgnore]
-        [Browsable(false)]
-        public double? MaxValue
-        {
-            get => _maxValue;
-            set => Set(ref _maxValue, value);
-        }
-
-        [JsonIgnore]
-        [Browsable(false)]
-        public ObservableCollection<double> Values
-        {
-            get => _values;
-            private set => Set(ref _values, value);
-        }
-
-        public override string ToString()
-        {
-            return _value.ToString(CultureInfo.InvariantCulture);
+            Values.Add(value); // todo: limit by Size / consider moving to post-processor
         }
     }
 
-    public interface IMetricWidget : IWidget
+    [JsonIgnore]
+    [Browsable(false)]
+    public double? MinValue
     {
-        double Value { get; set; }
-
-        double? MinValue { get; set; }
-
-        double? MaxValue { get; set; }
+        get => _minValue;
+        set => Set(ref _minValue, value);
     }
 
-    internal interface IMetricQuery<T> : IRequestHandler<MetricRequest<T>> where T : IMetricWidget { }
-
-    public class MetricRequest<TMetric> : Request<TMetric> where TMetric : IMetricWidget
+    [JsonIgnore]
+    [Browsable(false)]
+    public double? MaxValue
     {
-        public MetricRequest(TMetric context) : base(context) { }
+        get => _maxValue;
+        set => Set(ref _maxValue, value);
     }
 
-    public static class MetricRequestFactory
-    {
-        public static MetricRequest<TMetric> Create<TMetric>(TMetric context) where TMetric : IMetricWidget
-        {
-            return new MetricRequest<TMetric>(context);
-        }
-    }
+    public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
+}
 
-    public abstract class AsyncMetricQuery<TMetric> : AsyncRequestHandler<MetricRequest<TMetric>>
-        where TMetric : IMetricWidget
-    {
-        protected abstract override Task Handle(MetricRequest<TMetric> request, CancellationToken cancellationToken);
-    }
+public interface IMetricWidget : IWidget
+{
+    double Value { get; set; }
 
-    public abstract class MetricQuery<TMetric> : RequestHandler<MetricRequest<TMetric>>
-        where TMetric : IMetricWidget
-    {
-        protected abstract override void Handle(MetricRequest<TMetric> request);
-    }
+    double? MinValue { get; set; }
+
+    double? MaxValue { get; set; }
+}
+
+internal interface IMetricQuery<T> : IRequestHandler<MetricRequest<T>>
+    where T : IMetricWidget { }
+
+public class MetricRequest<TMetric> : Request<TMetric>
+    where TMetric : IMetricWidget
+{
+    public MetricRequest(TMetric context) : base(context) { }
+}
+
+public static class MetricRequestFactory
+{
+    public static MetricRequest<TMetric> Create<TMetric>(TMetric context)
+        where TMetric : IMetricWidget => new (context);
+}
+
+public abstract class AsyncMetricQuery<TMetric> : AsyncRequestHandler<MetricRequest<TMetric>>
+    where TMetric : IMetricWidget
+{
+    protected abstract override Task Handle(MetricRequest<TMetric> request, CancellationToken cancellationToken);
+}
+
+public abstract class MetricQuery<TMetric> : RequestHandler<MetricRequest<TMetric>>
+    where TMetric : IMetricWidget
+{
+    protected abstract override void Handle(MetricRequest<TMetric> request);
 }

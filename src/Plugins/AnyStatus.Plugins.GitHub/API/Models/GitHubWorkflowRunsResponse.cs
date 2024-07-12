@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace AnyStatus.Plugins.GitHub.API.Models
+namespace AnyStatus.Plugins.GitHub.API.Models;
+
+internal class GitHubWorkflowRunsResponse
 {
-    internal class GitHubWorkflowRunsResponse
-    {
-        public IEnumerable<GitHubWorkflowRun> WorkflowRuns { get; set; }
-    }
+    public IEnumerable<GitHubWorkflowRun> WorkflowRuns { get; set; }
 }

@@ -1,12 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace AnyStatus.Apps.Windows.Features.Dashboard.DataTemplates
+namespace AnyStatus.Apps.Windows.Features.Dashboard.DataTemplates;
+
+public partial class JenkinsJobView : UserControl
 {
-    public partial class JenkinsJobView : UserControl
-    {
-        public JenkinsJobView()
-        {
-            InitializeComponent();
-        }
-    }
+    public JenkinsJobView() { InitializeComponent(); }
 }

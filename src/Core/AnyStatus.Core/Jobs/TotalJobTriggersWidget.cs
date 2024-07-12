@@ -1,32 +1,34 @@
-﻿using AnyStatus.API.Widgets;
-using Quartz;
-using Quartz.Impl.Matchers;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using AnyStatus.API.Widgets;
+using Quartz;
+using Quartz.Impl.Matchers;
 
-namespace AnyStatus.Plugins.Quartz
+namespace AnyStatus.Plugins.Quartz;
+
+[Category("AnyStatus")]
+[DisplayName("Total Job Triggers")]
+[Description("Display the total number of scheduled job triggers")]
+public class TotalJobTriggersWidget : TextWidget, ICommonWidget, IPollable { }
+
+public class TotalJobTriggersQuery : AsyncStatusCheck<TotalJobTriggersWidget>
 {
-    [Category("AnyStatus")]
-    [DisplayName("Total Job Triggers")]
-    [Description("Display the total number of scheduled job triggers")]
-    public class TotalJobTriggersWidget : TextWidget, ICommonWidget, IPollable { }
+    private readonly ISchedulerFactory _schedulerFactory;
 
-    public class TotalJobTriggersQuery : AsyncStatusCheck<TotalJobTriggersWidget>
+    public TotalJobTriggersQuery(ISchedulerFactory schedulerFactory)
     {
-        private readonly ISchedulerFactory _schedulerFactory;
+        _schedulerFactory = schedulerFactory;
+    }
 
-        public TotalJobTriggersQuery(ISchedulerFactory schedulerFactory) => _schedulerFactory = schedulerFactory;
+    protected override async Task Handle(StatusRequest<TotalJobTriggersWidget> request, CancellationToken cancellationToken)
+    {
+        var scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
 
-        protected override async Task Handle(StatusRequest<TotalJobTriggersWidget> request, CancellationToken cancellationToken)
-        {
-            var scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
+        var triggerKeys = await scheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup());
 
-            var triggerKeys = await scheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup());
+        request.Context.Text = triggerKeys.Count.ToString();
 
-            request.Context.Text = triggerKeys.Count.ToString();
-
-            request.Context.Status = Status.OK;
-        }
+        request.Context.Status = Status.OK;
     }
 }

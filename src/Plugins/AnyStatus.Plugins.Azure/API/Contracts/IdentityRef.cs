@@ -1,7 +1,6 @@
-﻿namespace AnyStatus.Plugins.Azure.API.Contracts
+﻿namespace AnyStatus.Plugins.Azure.API.Contracts;
+
+public class IdentityRef
 {
-    public class IdentityRef
-    {
-        public string DisplayName { get; set; }
-    }
+    public string DisplayName { get; set; }
 }

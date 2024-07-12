@@ -1,72 +1,84 @@
-﻿using AnyStatus.API.Attributes;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using AnyStatus.API.Attributes;
 using AnyStatus.API.Widgets;
 using AnyStatus.Core.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Reflection;
 
-namespace AnyStatus.Core.Serialization
+namespace AnyStatus.Core.Serialization;
+
+public class WidgetConverter : JsonConverter
 {
-    public class WidgetConverter : JsonConverter
+    private const    string  _typeKey = "$type";
+    private readonly ILogger _logger;
+
+    public WidgetConverter(ILogger logger)
     {
-        private readonly ILogger _logger;
-        private const string _typeKey = "$type";
+        _logger = logger;
+    }
 
-        public WidgetConverter(ILogger logger) => _logger = logger;
+    public override bool CanRead => true;
 
-        public override bool CanRead => true;
+    public override bool CanWrite => false;
 
-        public override bool CanWrite => false;
+    public override bool CanConvert(Type objectType) => typeof(IWidget).IsAssignableFrom(objectType);
 
-        public override bool CanConvert(Type objectType) => typeof(IWidget).IsAssignableFrom(objectType);
+    public override void WriteJson(JsonWriter     writer
+                                 , object         value
+                                 , JsonSerializer serializer) => throw new NotImplementedException();
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
+    public override object ReadJson(JsonReader     reader
+                                  , Type           objectType
+                                  , object         existingValue
+                                  , JsonSerializer serializer)
+    {
+        var token = JToken.ReadFrom(reader);
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        if (token.HasValues)
         {
-            var token = JToken.ReadFrom(reader);
+            var name = token.Value<string>(_typeKey);
 
-            if (token.HasValues)
+            if (!string.IsNullOrEmpty(name))
             {
-                var name = token.Value<string>(_typeKey);
-
-                if (!string.IsNullOrEmpty(name))
+                if (Type.GetType(name) is null)
                 {
-                    if (Type.GetType(name) is null)
+                    var widget = TryGetCompatibleWidget(name);
+
+                    if (widget is UnknownWidget unknownWidget)
                     {
-                        var widget = TryGetCompatibleWidget(name);
+                        _logger.LogWarning("Unknown widget type: {type}", unknownWidget.TypeName);
 
-                        if (widget is UnknownWidget unknownWidget)
-                        {
-                            _logger.LogWarning("Unknown widget type: {type}", unknownWidget.TypeName);
-
-                            widget.Clear();
-                        }
-
-                        serializer.Populate(token.CreateReader(), widget);
-
-                        return widget;
+                        widget.Clear();
                     }
+
+                    serializer.Populate(token.CreateReader(), widget);
+
+                    return widget;
                 }
             }
-
-            return serializer.Deserialize(token.CreateReader());
         }
 
-        private static IWidget TryGetCompatibleWidget(string name)
+        return serializer.Deserialize(token.CreateReader());
+    }
+
+    private static IWidget TryGetCompatibleWidget(string name)
+    {
+        foreach (var type in Scanner.GetTypesOf<IWidget>(false)
+                                    .Where(type => type.IsDefined(typeof(RedirectAttribute))))
         {
-            foreach (var type in Scanner.GetTypesOf<IWidget>(browsableOnly: false).Where(type => type.IsDefined(typeof(RedirectAttribute))))
+            foreach (var attribute in type.GetCustomAttributes<RedirectAttribute>()
+                                          .Where(attr => attr.TypeName.Equals(name)))
             {
-                foreach (var attribute in type.GetCustomAttributes<RedirectAttribute>().Where(attr => attr.TypeName.Equals(name)))
-                {
-                    return (IWidget)Activator.CreateInstance(type); //replace activator with container?
-                }
+                return (IWidget)Activator.CreateInstance(type); //replace activator with container?
             }
-
-            return new UnknownWidget { TypeName = name };
         }
+
+        return new UnknownWidget
+               {
+                   TypeName = name
+               };
     }
 }

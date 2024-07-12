@@ -1,12 +1,11 @@
-﻿using AnyStatus.API.Notifications;
-using System;
+﻿using System;
+using AnyStatus.API.Notifications;
 
-namespace AnyStatus.Apps.Windows.Features.SystemTray
+namespace AnyStatus.Apps.Windows.Features.SystemTray;
+
+public interface ISystemTray : IDisposable
 {
-    public interface ISystemTray : IDisposable
-    {
-        string Status { get; set; }
+    string Status { get; set; }
 
-        void ShowNotification(Notification notification);
-    }
+    void ShowNotification(Notification notification);
 }

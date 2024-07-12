@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace AnyStatus.API.Widgets;
 
-namespace AnyStatus.API.Widgets
+public interface IPollable
 {
-    public interface IPollable
-    {
-        //IPollingTrigger (check quartz.net)
-    }
+    //IPollingTrigger (check quartz.net)
 }

@@ -1,29 +1,28 @@
-﻿using AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu;
+﻿using System.Linq;
+using System.Reflection;
+using AnyStatus.Apps.Windows.Infrastructure.Mvvm.ContextMenu;
 using MediatR;
 using SimpleInjector;
 using SimpleInjector.Packaging;
-using System.Linq;
-using System.Reflection;
 
-namespace AnyStatus.Apps.Windows.Features.ContextMenu
+namespace AnyStatus.Apps.Windows.Features.ContextMenu;
+
+public class ContextMenuPackage : IPackage
 {
-    public class ContextMenuPackage : IPackage
+    public void RegisterServices(Container container)
     {
-        public void RegisterServices(Container container)
-        {
-            container.Register<IContextMenuViewModel, ContextMenuViewModel>();
-            
-            container.Register(typeof(IRequestHandler<,>), typeof(DynamicContextMenu.Handler<>));
+        container.Register<IContextMenuViewModel, ContextMenuViewModel>();
 
-            container.Collection.Register(typeof(ContextMenu<>),
-               container.GetTypesToRegister(typeof(ContextMenu<>),
-                   new[] { Assembly.GetExecutingAssembly() },
-                   new TypesToRegisterOptions
-                   {
-                       IncludeGenericTypeDefinitions = true,
-                       IncludeComposites = false
-                   })
-                   .Where(x => x.GetGenericTypeDefinition() != typeof(DefaultContextMenuItem<>)));
-        }
+        container.Register(typeof(IRequestHandler<,>), typeof(DynamicContextMenu.Handler<>));
+
+        container.Collection.Register(typeof(ContextMenu<>)
+                                    , container.GetTypesToRegister(typeof(ContextMenu<>)
+                                                                 , new[] { Assembly.GetExecutingAssembly() }
+                                                                 , new()
+                                                                   {
+                                                                       IncludeGenericTypeDefinitions = true
+                                                                     , IncludeComposites             = false
+                                                                   })
+                                               .Where(x => x.GetGenericTypeDefinition() != typeof(DefaultContextMenuItem<>)));
     }
 }
