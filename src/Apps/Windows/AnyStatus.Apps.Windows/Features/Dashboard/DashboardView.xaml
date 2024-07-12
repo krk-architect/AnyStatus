@@ -29,6 +29,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="Background" Value="{DynamicResource WidgetBackground}" />
             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+            <EventSetter Event="MouseDoubleClick" Handler="TreeViewItem_MouseDoubleClick" />
         </Style>
 
         <Style x:Key="ParentTreeViewItemStyle" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">

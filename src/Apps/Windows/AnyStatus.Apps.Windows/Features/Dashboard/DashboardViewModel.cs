@@ -12,6 +12,7 @@ public class DashboardViewModel : BaseViewModel
 {
     public DashboardViewModel(IMediator mediator, IAppContext context, IContextMenuViewModel contextMenuViewModel)
     {
+        Mediator             = mediator;
         Context              = context;
         ContextMenuViewModel = contextMenuViewModel;
         Commands.Add("OpenContextMenu",  new Command(async ctx => contextMenuViewModel.Items = await mediator.Send(DynamicContextMenu.Request.Create(ctx ?? context.Session.Widget))));
@@ -21,7 +22,8 @@ public class DashboardViewModel : BaseViewModel
         Commands.Add("MoveDown",         new Command(w => ((IWidget)w).MoveDown(), w => w is IWidget movable && movable.CanMoveDown()));
     }
 
-    public IAppContext Context { get; }
+    public IMediator   Mediator { get; }
+    public IAppContext Context  { get; }
 
     public IContextMenuViewModel ContextMenuViewModel { get; }
 }
